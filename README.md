@@ -55,6 +55,8 @@ build/distributions/
 - The build uses IntelliJ Platform Gradle Plugin 2.x, Gradle 9.x, and targets
   IntelliJ Platform 2023.3+.
 - Dependency updates are handled by Dependabot.
+- Dependency health policy and known compatibility exceptions are tracked in
+  [docs/DEPENDENCY_HEALTH.md](docs/DEPENDENCY_HEALTH.md).
 - Security and quality checks run through GitHub Actions: Gradle build/test,
   dependency review, Gradle wrapper validation via `gradle/actions/setup-gradle`,
   and CodeQL for Java/Kotlin.
