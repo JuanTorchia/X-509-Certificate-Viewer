@@ -21,9 +21,10 @@ scoop bucket add java
 scoop install temurin17-jdk
 ```
 
-This repository should be built with JDK 17. Newer JDKs can break the older
-Gradle/Kotlin tooling used by the IntelliJ plugin build. In particular, Java 25
-can fail before compilation with an error like:
+This repository should be built with JDK 17. The plugin build uses the modern
+IntelliJ Platform Gradle Plugin 2.x toolchain and Gradle 9.x. Newer JDKs can
+still break Gradle/Kotlin tooling before compilation. In particular, Java 25 can
+fail before compilation with an error like:
 
 ```text
 java.lang.IllegalArgumentException: 25.0.2
