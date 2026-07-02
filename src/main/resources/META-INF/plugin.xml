@@ -31,6 +31,12 @@
     </extensions>
 
     <actions>
-        <!-- Add actions here -->
+        <action id="com.architect.certviewer.SupportAction" 
+                class="com.architect.certviewer.SupportAction" 
+                text="Support X.509 Certificate Viewer..." 
+                description="Open sponsorship page"
+                icon="AllIcons.Actions.Suspend">
+            <add-to-group group-id="HelpMenu" anchor="last"/>
+        </action>
     </actions>
 </idea-plugin>
