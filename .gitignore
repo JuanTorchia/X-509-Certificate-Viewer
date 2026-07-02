@@ -8,6 +8,7 @@ out/
 # Gradle
 .gradle/
 build/
+.intellijPlatform/
 
 # Kotlin
 bin/
