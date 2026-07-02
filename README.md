@@ -1,40 +1,80 @@
-# X.509 Certificate Viewer for IntelliJ IDEA
+# X.509 Certificate Viewer
 
-A premium, open-source plugin for inspecting X.509 certificates and keystores with a focus on readability and developer experience.
+Inspect X.509 certificates and keystores directly inside IntelliJ-based IDEs,
+without switching to OpenSSL for every check.
 
-![Preview](https://raw.githubusercontent.com/JuanTorchia/certificate-viewer-open/main/resources/preview.png)
+## Repository layout
 
-## Features
+| Path | Purpose |
+| --- | --- |
+| `src/` | IntelliJ Platform plugin source code. |
+| `build.gradle.kts` | Gradle build for the plugin. |
+| `.github/workflows/` | CI and publishing workflows. |
+| `.github/dependabot.yml` | Dependency update automation for Gradle and GitHub Actions. |
 
-- **Multi-Format Support**: Works with `.pem`, `.crt`, `.cer`, `.der`, `.p12`, `.pfx`, `.jks`, and `.jceks`.
-- **Premium UI v2.0**: Card-based layout with clean typography and hierarchical data display.
-- **Validity Monitoring**: Visual timeline and progress bars showing certificate lifespan and expiration status.
-- **Expert Metadata**: Automatic calculation of SHA-256 fingerprints, Subject/Issuer details, and Serial Numbers.
-- **Developer Tools**: Single-click "Copy to Clipboard" for all sensitive metadata.
-- **Security First**: Interactive and secure password prompting for encrypted keystores.
-- **IDE Native**: Deep integration with the IntelliJ Editor system.
+## Current status
 
-## Installation
+This repository is the IntelliJ Platform plugin implementation. It can register
+certificate and keystore file types, open them in a custom editor, parse X.509
+certificates, and prompt for keystore passwords when required.
 
-1. Open **Settings/Preferences** (`Ctrl+Alt+S`).
-2. Navigate to **Plugins**.
-3. Search for "X.509 Certificate Viewer" (once published) or **Install from Disk** using the provided `.zip` artifact.
-4. Restart the IDE to apply file associations.
+## Supported formats
 
-## Usage
+Current IntelliJ file associations:
 
-Simply double-click any certificate or keystore file in the **Project** view. The viewer will automatically open in a new editor tab. If the file is a password-protected keystore, a secure dialog will prompt for the password.
+| Extension | Format |
+| --- | --- |
+| `.pem` | PEM certificate |
+| `.crt`, `.cer` | PEM or DER certificate |
+| `.der` | DER certificate |
+| `.p12`, `.pfx` | PKCS#12 keystore |
+| `.jks`, `.jceks` | Java keystore |
 
-## Building from Source
+## IntelliJ usage
+
+1. Open a supported certificate or keystore file from the Project view.
+2. The custom certificate viewer opens instead of the default editor.
+3. Password-protected keystores prompt for a password in the IDE.
+4. Certificate metadata and validity information are shown in the viewer.
+
+## Build from source
 
 ```bash
-git clone https://github.com/JuanTorchia/certificate-viewer-open.git
-cd certificate-viewer-open
 ./gradlew build
 ```
 
-The plugin ZIP will be generated in `build/distributions/`.
+The plugin ZIP is generated under:
+
+```text
+build/distributions/
+```
+
+## Development notes
+
+- Java 17 is required for the IntelliJ plugin build.
+- Dependency updates are handled by Dependabot.
+- Do not commit real private keys, certificates, keystores, or marketplace
+  signing secrets.
+
+## Security notes
+
+This tool is intended for local certificate inspection. It does not establish
+trust, perform full certificate path validation, check revocation status, or
+replace organizational PKI policy review.
+
+Security-sensitive findings should be reported privately. See
+[`SECURITY.md`](SECURITY.md).
+
+## Roadmap
+
+The active improvement backlog is tracked in [`docs/ROADMAP.md`](docs/ROADMAP.md).
+Use GitHub Issues for specific bugs, hardening tasks, and feature proposals.
+
+## Contributing
+
+Contributions are welcome when they are scoped, testable, and clear about the
+certificate formats affected. Start with [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## License
 
-This project is licensed under the **Apache License 2.0**.
+This project is licensed under the Apache License 2.0.

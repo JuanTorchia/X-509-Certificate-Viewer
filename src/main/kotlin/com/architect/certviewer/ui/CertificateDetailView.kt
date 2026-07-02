@@ -9,6 +9,7 @@ import com.intellij.ui.JBColor
 import com.intellij.ui.components.ActionLink
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
+import com.intellij.ide.BrowserUtil
 import com.intellij.util.ui.FormBuilder
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
@@ -42,7 +43,6 @@ class CertificateDetailView {
         scrollContent.background = UIUtil.getPanelBackground()
         scrollContent.border = JBUI.Borders.emptyRight(10)
         
-        content.add(statusLabel, BorderLayout.NORTH)
         content.add(scrollPane, BorderLayout.CENTER)
     }
 
@@ -58,8 +58,25 @@ class CertificateDetailView {
             statusLabel.text = "Certificate Analysis"
             statusLabel.foreground = UIUtil.getLabelForeground()
             
+            val headerPanel = JPanel(BorderLayout())
+            headerPanel.isOpaque = false
+            headerPanel.add(statusLabel, BorderLayout.WEST)
+            
+            val supportLink = ActionLink("Support this Plugin").apply {
+                addActionListener {
+                    BrowserUtil.browse("https://github.com/sponsors/JuanTorchia")
+                }
+                icon = AllIcons.Actions.Suspend
+            }.apply {
+                font = font.deriveFont(Font.BOLD, 12f)
+                foreground = JBColor.RED
+                border = JBUI.Borders.empty(12, 0, 18, 5)
+            }
+            headerPanel.add(supportLink, BorderLayout.EAST)
+            
             val mainPanel = JPanel(BorderLayout())
             mainPanel.isOpaque = false
+            mainPanel.add(headerPanel, BorderLayout.NORTH)
             
             val contentPanel = JPanel(GridBagLayout())
             contentPanel.isOpaque = false
@@ -220,8 +237,10 @@ class CertificateDetailView {
                 this.text = text.substring(0, 77) + "..."
             }
         }
-        val copyAction = ActionLink("Copy") {
-            CopyPasteManager.getInstance().setContents(StringSelection(text))
+        val copyAction = ActionLink("Copy").apply {
+            addActionListener {
+                CopyPasteManager.getInstance().setContents(StringSelection(text))
+            }
         }.apply {
             font = UIUtil.getLabelFont(UIUtil.FontSize.SMALL).deriveFont(Font.BOLD)
         }

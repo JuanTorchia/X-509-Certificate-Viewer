@@ -1,0 +1,52 @@
+# Contributing
+
+Thanks for helping improve X.509 Certificate Viewer. This project handles
+security-adjacent data, so changes need to be explicit, testable, and careful
+about inputs.
+
+## Good first workflow
+
+1. Open or pick an issue before starting larger work.
+2. Keep each PR focused on one bug, format, parser behavior, UI improvement, or
+   workflow change.
+3. Add or update tests for parser behavior and supported formats.
+4. Run the relevant local checks before opening a PR.
+5. Describe what changed, how it was tested, and any remaining risk.
+
+## Local setup
+
+```bash
+./gradlew test
+./gradlew build
+```
+
+## Contribution standards
+
+- Prefer small PRs that reviewers can validate quickly.
+- Include sample certificates only when they are generated test fixtures.
+- Never add real private keys, customer certificates, signing credentials, or
+  marketplace tokens.
+- Document limitations when a parser feature is advisory rather than a full
+  trust decision.
+- For UI changes, include screenshots or a short before/after description.
+- For publishing or CI changes, include the exact command or workflow path that
+  was validated.
+
+## Issue quality
+
+Good issues include:
+
+- affected IDE or workflow area
+- file format: PEM, DER, PKCS#12, JKS, JCEKS, etc.
+- expected behavior
+- actual behavior
+- reproduction steps
+- sanitized sample input or a generated fixture when possible
+
+## Pull request checklist
+
+- [ ] The PR has one clear scope.
+- [ ] Tests or manual validation are documented.
+- [ ] Security-sensitive behavior is described.
+- [ ] Docs were updated when user-facing behavior changed.
+- [ ] No secrets, private certificates, or generated build outputs are included.
