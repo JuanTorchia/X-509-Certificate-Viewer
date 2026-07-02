@@ -1,38 +1,55 @@
 # Roadmap
 
-This roadmap tracks practical improvements for making the IntelliJ plugin
-easier to use, safer to maintain, and easier to contribute to.
+This roadmap tracks the work needed to make X.509 Certificate Viewer for
+IntelliJ useful for real certificate-heavy projects, trustworthy as a
+security-adjacent tool, and easy for outside contributors to improve.
 
-## Near term
+## Public Project Polish
 
-- Fix CI workflow correctness and split build from publish steps.
-- Add real parser tests with valid PEM and DER fixtures.
-- Add input size limits before parsing certificates and keystores.
-- Improve IntelliJ plugin metadata, screenshots, and marketplace documentation.
+- Add Marketplace-ready screenshots and keep them in sync with the plugin UI.
+- Keep reusable Marketplace copy in `docs/MARKETPLACE_COPY.md`.
+- Keep GitHub repository metadata aligned with the JetBrains plugin positioning:
+  IntelliJ, JetBrains, PKI, X.509, Java keystores, digital trust.
+- Maintain clear README sections for installation, supported formats, security
+  limits, and contribution entry points.
+- Keep public claims tied to implemented behavior. No marketing copy should
+  promise validation, revocation checks, or policy decisions the plugin does not
+  perform.
 
-## Parser and security hardening
+## Parser And Fixture Quality
 
+- Add generated PEM and DER fixtures that are safe to publish.
+- Add PKCS#12 and JKS fixture coverage with generated passwords documented in
+  test code.
+- Cover malformed, empty, encrypted, unsupported, and oversized inputs.
 - Support multi-certificate PEM chains.
-- Show advisory warnings for expired and soon-to-expire certificates.
 - Decode and display common extensions such as SAN, Key Usage, Extended Key
   Usage, Basic Constraints, and Subject Key Identifier.
-- Add clear error states for encrypted, unsupported, malformed, and oversized
+
+## Security Hardening
+
+- Define explicit maximum input sizes before parsing certificates and keystores.
+- Reject oversized files before expensive parser work starts.
+- Show clear IDE errors for unsupported, malformed, encrypted, and oversized
   inputs.
 - Avoid holding keystore passwords longer than needed.
+- Keep dependency security automation on by default: Dependabot, Dependency
+  Review, CodeQL, GitGuardian, and Gradle build checks.
 
-## Contributor experience
+## Contributor Experience
 
-- Keep issue templates focused on reproducible bugs and specific feature
-  proposals.
-- Track larger improvements as GitHub Issues instead of hidden TODOs.
-- Add screenshots or generated fixtures for UI and parser changes.
-- Keep release notes in the README or a dedicated changelog once releases begin.
-- Treat security and quality automation as required PR checks once the workflows
-  are stable.
+- Keep issues small enough for first-time contributors.
+- Label starter work with `good first issue` and `help wanted`.
+- Prefer generated fixtures over real certificates or private material.
+- Ask UI contributors for screenshots or short before/after notes.
+- Keep Windows development setup documented because this project is maintained
+  from a Windows workstation.
 
-## Release readiness
+## Release And Marketplace Readiness
 
-- Verify Gradle wrapper and Java version compatibility in CI.
-- Ensure publish workflows only run on protected release paths.
-- Document required repository secrets for marketplace publishing.
-- Add dry-run or build-only jobs for pull requests.
+- Publish only from protected release paths with required secrets.
+- Document JetBrains Marketplace secrets and signing expectations.
+- Add release notes once the plugin starts receiving regular Marketplace
+  updates.
+- Verify compatibility against supported IntelliJ Platform versions before
+  widening the supported build range.
