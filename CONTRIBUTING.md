@@ -1,8 +1,9 @@
 # Contributing
 
-Thanks for helping improve X.509 Certificate Viewer. This project handles
-security-adjacent data, so changes need to be explicit, testable, and careful
-about inputs.
+Thanks for helping improve X.509 Certificate Viewer for IntelliJ. This is a
+security-adjacent developer tool from Juan Torchia's public engineering lab, so
+contributions should be practical, testable, and careful about real-world PKI
+inputs.
 
 ## Good first workflow
 
@@ -12,6 +13,14 @@ about inputs.
 3. Add or update tests for parser behavior and supported formats.
 4. Run the relevant local checks before opening a PR.
 5. Describe what changed, how it was tested, and any remaining risk.
+
+Good first contribution areas:
+
+- generated PEM or DER fixtures for parser tests
+- malformed input cases that should fail cleanly
+- documentation and Marketplace wording
+- UI copy and small layout improvements
+- compatibility notes for newer JetBrains IDE builds
 
 ## Local setup
 
@@ -28,6 +37,7 @@ Windows setup.
 ## Contribution standards
 
 - Prefer small PRs that reviewers can validate quickly.
+- Keep claims concrete. Do not describe behavior that is not implemented.
 - Include sample certificates only when they are generated test fixtures.
 - Never add real private keys, customer certificates, signing credentials, or
   marketplace tokens.
