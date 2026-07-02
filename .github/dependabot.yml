@@ -8,6 +8,9 @@ updates:
       time: "09:00"
       timezone: "America/Argentina/Buenos_Aires"
     open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "security"
     groups:
       gradle-dependencies:
         patterns:
@@ -21,6 +24,9 @@ updates:
       time: "09:00"
       timezone: "America/Argentina/Buenos_Aires"
     open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "ci"
     groups:
       github-actions:
         patterns:
