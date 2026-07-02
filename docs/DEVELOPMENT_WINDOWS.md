@@ -9,19 +9,19 @@ directory.
 - Windows 10 or 11
 - Git
 - PowerShell 7 or Windows PowerShell
-- JDK 17
+- JDK 21
 - IntelliJ IDEA for plugin development and manual testing
 
-## Install JDK 17
+## Install JDK 21
 
 Recommended with Scoop:
 
 ```powershell
 scoop bucket add java
-scoop install temurin17-jdk
+scoop install temurin21-jdk
 ```
 
-This repository should be built with JDK 17. The plugin build uses the modern
+This repository should be built with JDK 21. The plugin build uses the modern
 IntelliJ Platform Gradle Plugin 2.x toolchain and Gradle 9.x. Newer JDKs can
 still break Gradle/Kotlin tooling before compilation. In particular, Java 25 can
 fail before compilation with an error like:
@@ -38,7 +38,7 @@ From the repository root:
 .\scripts\dev-env.ps1
 ```
 
-To run a command with JDK 17 activated only for that command:
+To run a command with JDK 21 activated only for that command:
 
 ```powershell
 .\scripts\dev-env.ps1 .\gradlew.bat test
@@ -46,14 +46,14 @@ To run a command with JDK 17 activated only for that command:
 .\scripts\dev-env.ps1 .\gradlew.bat runIde
 ```
 
-The script sets `JAVA_HOME` and prepends JDK 17 to `PATH` for the current
+The script sets `JAVA_HOME` and prepends JDK 21 to `PATH` for the current
 PowerShell process only. It does not permanently change the machine-wide Java
 configuration.
 
-If JDK 17 is installed somewhere custom, set:
+If JDK 21 is installed somewhere custom, set:
 
 ```powershell
-$env:CERT_VIEWER_JDK17 = "C:\path\to\jdk-17"
+$env:CERT_VIEWER_JDK21 = "C:\path\to\jdk-21"
 .\scripts\dev-env.ps1 .\gradlew.bat build
 ```
 
@@ -104,4 +104,4 @@ Stop Gradle daemons after switching Java versions:
 ```
 
 If the build fails before compiling Kotlin, verify that the command is running
-with JDK 17 through `scripts/dev-env.ps1`.
+with JDK 21 through `scripts/dev-env.ps1`.

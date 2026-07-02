@@ -1,16 +1,110 @@
 package com.architect.certviewer
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertThrows
+import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.io.ByteArrayOutputStream
+import java.security.KeyStore
+import java.security.cert.X509Certificate
 
 class X509ParserServiceTest {
 
     private val parser = X509ParserService()
 
     @Test
-    fun testParsePem() {
-        val pem = """
+    fun parsesPemCertificate() {
+        val cert = parseFixtureCertificate()
+
+        assertNotNull(cert)
+        assertEquals("CN=Test Certificate,O=Certificate Viewer,C=US", cert.subjectX500Principal.name)
+    }
+
+    @Test
+    fun parsesDerCertificate() {
+        val cert = parseFixtureCertificate()
+
+        val parsed = parser.parseDer(cert.encoded)
+
+        assertNotNull(parsed)
+        assertEquals(cert.subjectX500Principal, parsed!!.subjectX500Principal)
+    }
+
+    @Test
+    fun parsesPkcs12CertificateEntry() {
+        val cert = parseFixtureCertificate()
+        val keystore = createKeystore("PKCS12", cert, TEST_PASSWORD)
+
+        val certs = parser.parseKeystore(keystore, TEST_PASSWORD, "PKCS12")
+
+        assertEquals(1, certs.size)
+        assertEquals(cert.subjectX500Principal, certs.single().subjectX500Principal)
+    }
+
+    @Test
+    fun parsesJksCertificateEntry() {
+        val cert = parseFixtureCertificate()
+        val keystore = createKeystore("JKS", cert, TEST_PASSWORD)
+
+        val certs = parser.parseKeystore(keystore, TEST_PASSWORD, "JKS")
+
+        assertEquals(1, certs.size)
+        assertEquals(cert.subjectX500Principal, certs.single().subjectX500Principal)
+    }
+
+    @Test
+    fun rejectsPkcs12WithWrongPassword() {
+        val cert = parseFixtureCertificate()
+        val keystore = createKeystore("PKCS12", cert, TEST_PASSWORD)
+
+        assertThrows(Exception::class.java) {
+            parser.parseKeystore(keystore, "wrong-password".toCharArray(), "PKCS12")
+        }
+    }
+
+    @Test
+    fun returnsNullForInvalidPem() {
+        assertNull(parser.parseCertificate("not a certificate"))
+    }
+
+    @Test
+    fun returnsNullForInvalidDer() {
+        assertNull(parser.parseDer(byteArrayOf(1, 2, 3, 4)))
+    }
+
+    @Test
+    fun calculatesSha256Fingerprint() {
+        val cert = parseFixtureCertificate()
+
+        val fingerprint = parser.getFingerprint(cert, "SHA-256")
+
+        assertTrue(fingerprint.matches(Regex("([0-9A-F]{2}:){31}[0-9A-F]{2}")))
+        assertNotEquals("Error", fingerprint.substringBefore(":"))
+    }
+
+    private fun parseFixtureCertificate(): X509Certificate {
+        return parser.parseCertificate(TEST_CERTIFICATE_PEM)
+            ?: error("Test certificate fixture must parse")
+    }
+
+    private fun createKeystore(type: String, cert: X509Certificate, password: CharArray): ByteArray {
+        val keyStore = KeyStore.getInstance(type)
+        keyStore.load(null, password)
+        keyStore.setCertificateEntry("test-certificate", cert)
+
+        return ByteArrayOutputStream().use { output ->
+            keyStore.store(output, password)
+            output.toByteArray()
+        }
+    }
+
+    private companion object {
+        private val TEST_PASSWORD = "changeit".toCharArray()
+
+        private val TEST_CERTIFICATE_PEM = """
             -----BEGIN CERTIFICATE-----
             MIIDLTCCAhWgAwIBAgIIWyOIWD0B5G4wDQYJKoZIhvcNAQELBQAwRTELMAkGA1UE
             BhMCVVMxGzAZBgNVBAoTEkNlcnRpZmljYXRlIFZpZXdlcjEZMBcGA1UEAxMQVGVz
@@ -32,10 +126,5 @@ class X509ParserServiceTest {
             ZA==
             -----END CERTIFICATE-----
         """.trimIndent()
-
-        val cert = parser.parseCertificate(pem)
-
-        assertNotNull(cert)
-        assertEquals("CN=Test Certificate,O=Certificate Viewer,C=US", cert!!.subjectX500Principal.name)
     }
 }
