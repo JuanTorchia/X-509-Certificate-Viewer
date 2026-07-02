@@ -15,10 +15,15 @@ about inputs.
 
 ## Local setup
 
-```bash
-./gradlew test
-./gradlew build
+On Windows, use the repo-local environment script so Gradle runs with JDK 17:
+
+```powershell
+./scripts/dev-env.ps1 ./gradlew.bat test
+./scripts/dev-env.ps1 ./gradlew.bat build
 ```
+
+See [`docs/DEVELOPMENT_WINDOWS.md`](docs/DEVELOPMENT_WINDOWS.md) for the full
+Windows setup.
 
 ## Contribution standards
 

@@ -89,7 +89,7 @@ class CertificateDetailView {
             }
             
             certs.forEachIndexed { index, cert ->
-                val card = createCertificateCard(cert, index, index == 0)
+                val card = createCertificateCard(cert, index == 0)
                 contentPanel.add(card, gbc)
                 gbc.gridy++
                 
@@ -111,7 +111,7 @@ class CertificateDetailView {
         }
     }
 
-    private fun createCertificateCard(cert: X509Certificate, index: Int, isLeaf: Boolean): JPanel {
+    private fun createCertificateCard(cert: X509Certificate, isLeaf: Boolean): JPanel {
         val parser = service<X509ParserService>()
         val card = RoundedPanel(16)
         card.background = if (JBColor.isBright()) Color(245, 247, 249) else Color(43, 45, 48)
