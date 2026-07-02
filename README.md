@@ -53,6 +53,9 @@ build/distributions/
 
 - Java 17 is required for the IntelliJ plugin build.
 - Dependency updates are handled by Dependabot.
+- Security and quality checks run through GitHub Actions: Gradle build/test,
+  dependency review, Gradle wrapper validation via `gradle/actions/setup-gradle`,
+  and CodeQL for Java/Kotlin.
 - Do not commit real private keys, certificates, keystores, or marketplace
   signing secrets.
 - Windows setup is documented in [`docs/DEVELOPMENT_WINDOWS.md`](docs/DEVELOPMENT_WINDOWS.md).

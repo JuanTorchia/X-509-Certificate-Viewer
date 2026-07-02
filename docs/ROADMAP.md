@@ -27,6 +27,8 @@ easier to use, safer to maintain, and easier to contribute to.
 - Track larger improvements as GitHub Issues instead of hidden TODOs.
 - Add screenshots or generated fixtures for UI and parser changes.
 - Keep release notes in the README or a dedicated changelog once releases begin.
+- Treat security and quality automation as required PR checks once the workflows
+  are stable.
 
 ## Release readiness
 
