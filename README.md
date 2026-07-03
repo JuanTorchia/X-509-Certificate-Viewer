@@ -75,6 +75,15 @@ Current IntelliJ file associations:
 | `.p12`, `.pfx` | PKCS#12 keystore |
 | `.jks`, `.jceks` | Java keystore |
 
+Input size limits:
+
+| Input type | Maximum size |
+| --- | --- |
+| PEM, DER, CRT, CER certificate files | 1 MiB |
+| PKCS#12, JKS, JCEKS keystores | 10 MiB |
+
+Oversized files are refused before parsing to keep the IDE responsive.
+
 ## IntelliJ Usage
 
 1. Install the plugin from
@@ -159,6 +168,8 @@ conservative:
 - Gradle build and tests run in CI.
 - UI Integration runs the full `validateFunctional` gate as an experimental,
   non-blocking signal while the IntelliJ sandbox test is stabilized.
+- Certificate and keystore inputs have explicit size limits and oversized
+  files are rejected before parser work starts.
 - Secret scanning and push protection are expected at the repository level;
   GitGuardian may also appear as an external app check when enabled by the
   repository owner.

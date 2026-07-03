@@ -45,7 +45,8 @@ Use the narrowest validation that proves the change:
 ```
 
 The full functional validation gate runs parser tests, the IntelliJ
-Starter/Driver UI integration test, and the plugin build:
+Starter/Driver UI integration test, checks IntelliJ sandbox logs for errors
+blamed on this plugin, and builds the plugin:
 
 ```powershell
 ./scripts/dev-env.ps1 ./gradlew.bat validateFunctional --no-daemon
@@ -54,6 +55,11 @@ Starter/Driver UI integration test, and the plugin build:
 CI also runs an experimental UI Integration workflow for `validateFunctional`.
 It is intentionally non-blocking until the sandbox test is stable enough to make
 required.
+
+If IntelliJ shows a bottom-right IDE error notification while testing this
+plugin, treat it as a bug until the sandbox logs prove otherwise. The
+`validateFunctional` gate is expected to catch plugin-blamed IDE log errors such
+as deprecated `FileEditor` contract violations.
 
 See [`docs/DEVELOPMENT_WINDOWS.md`](docs/DEVELOPMENT_WINDOWS.md) for the full
 Windows setup.
