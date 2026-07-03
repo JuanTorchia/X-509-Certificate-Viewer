@@ -72,10 +72,57 @@ intellijPlatformTesting.testIdeUi.register("integrationTest") {
     }
 }
 
+tasks.named("integrationTest") {
+    doFirst {
+        delete(layout.projectDirectory.dir("out/ide-tests/tests"))
+    }
+}
+
+tasks.register("verifyIdePluginLogs") {
+    group = "verification"
+    description = "Fails when IntelliJ sandbox logs report errors blamed on this plugin."
+    dependsOn("integrationTest")
+
+    doLast {
+        val ideTestLogs = layout.projectDirectory.dir("out/ide-tests/tests").asFile
+        if (!ideTestLogs.exists()) {
+            logger.lifecycle("No IntelliJ sandbox logs found under ${ideTestLogs.path}; skipping plugin log verification.")
+            return@doLast
+        }
+
+        val pluginErrorPatterns = listOf(
+            "Plugin to blame: X.509 Certificate Viewer",
+            "[Plugin: com.architect.certviewer]",
+            "SEVERE - #com.architect.certviewer",
+        )
+        val failures = ideTestLogs
+            .walkTopDown()
+            .filter { it.isFile && it.name == "idea.log" }
+            .flatMap { logFile ->
+                logFile.readLines()
+                    .filter { line -> pluginErrorPatterns.any(line::contains) }
+                    .map { line -> "${logFile.relativeTo(projectDir)}: $line" }
+            }
+            .toList()
+
+        if (failures.isNotEmpty()) {
+            throw GradleException(
+                buildString {
+                    appendLine("IntelliJ sandbox logs contain errors blamed on this plugin:")
+                    failures.take(20).forEach { appendLine(it) }
+                    if (failures.size > 20) {
+                        appendLine("...and ${failures.size - 20} more plugin log error(s).")
+                    }
+                },
+            )
+        }
+    }
+}
+
 tasks.register("validateFunctional") {
     group = "verification"
-    description = "Runs parser tests, IntelliJ UI integration tests, and the plugin build."
-    dependsOn("test", "integrationTest", "build")
+    description = "Runs parser tests, IntelliJ UI integration tests, IDE plugin log checks, and the plugin build."
+    dependsOn("test", "verifyIdePluginLogs", "build")
 }
 
 intellijPlatform {
