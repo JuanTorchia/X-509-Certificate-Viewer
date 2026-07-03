@@ -122,6 +122,7 @@ class CertificateFileEditor(private val file: VirtualFile) : UserDataHolderBase(
 
     override fun getComponent(): JComponent = view.content
     override fun getPreferredFocusedComponent(): JComponent? = view.content
+    override fun getFile(): VirtualFile = file
     override fun getName(): String = "Certificate Viewer"
     override fun setState(state: FileEditorState) {}
     override fun isModified(): Boolean = false

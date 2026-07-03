@@ -56,6 +56,7 @@ class MarketplaceSandboxSmokeTest {
 
                 assertEquals(certificateFile.getPath(), editorManager.getCurrentFile().getPath())
                 assertEquals(1, openedEditors.size, "Certificate files should open in a single custom editor")
+                assertEquals(certificateFile.getPath(), openedEditors.single().getFile().getPath())
                 assertNull(editorManager.getSelectedTextEditor(), "Certificate files must not open in the default text editor")
             }
 
