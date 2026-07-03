@@ -29,8 +29,8 @@ security-adjacent tool, and easy for outside contributors to improve.
 
 ## Security Hardening
 
-- Define explicit maximum input sizes before parsing certificates and keystores.
-- Reject oversized files before expensive parser work starts.
+- Maintain explicit maximum input sizes before parsing certificates and keystores.
+- Keep oversized file rejection before expensive parser work starts.
 - Show clear IDE errors for unsupported, malformed, encrypted, and oversized
   inputs.
 - Avoid holding keystore passwords longer than needed.

@@ -41,7 +41,6 @@ class CertificateFileEditor(private val file: VirtualFile) : UserDataHolderBase(
 
     private fun loadCertificate() {
         val parser = service<X509ParserService>()
-        val content = file.contentsToByteArray()
         val extension = file.extension?.lowercase() ?: ""
         
         try {
@@ -51,6 +50,20 @@ class CertificateFileEditor(private val file: VirtualFile) : UserDataHolderBase(
                 "jceks" -> "JCEKS"
                 else -> null
             }
+
+            val maxBytes = if (keystoreType != null) {
+                X509ParserService.MAX_KEYSTORE_BYTES
+            } else {
+                X509ParserService.MAX_CERTIFICATE_BYTES
+            }
+            if (file.length > maxBytes) {
+                view.displayError(
+                    "File is too large for Certificate Viewer. Maximum supported size is ${X509ParserService.formatBytes(maxBytes.toLong())}.",
+                )
+                return
+            }
+
+            val content = file.contentsToByteArray()
 
             if (keystoreType != null) {
                 var certs: List<X509Certificate> = emptyList()
