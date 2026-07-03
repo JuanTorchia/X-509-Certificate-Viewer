@@ -12,8 +12,10 @@ import com.intellij.ide.starter.models.TestCase
 import com.intellij.ide.starter.plugins.PluginConfigurator
 import com.intellij.ide.starter.project.LocalProjectInfo
 import com.intellij.ide.starter.runner.Starter
+import com.intellij.driver.sdk.ui.ui
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Path
@@ -40,6 +42,9 @@ class MarketplaceSandboxSmokeTest {
             while (getOpenProjects().isEmpty() && System.currentTimeMillis() < projectOpenDeadline) {
                 Thread.sleep(1_000)
             }
+            if (getOpenProjects().isEmpty()) {
+                error("Timed out waiting for IntelliJ to open the sandbox test project")
+            }
 
             withContext(OnDispatcher.EDT, LockSemantics.NO_LOCK) {
                 val project = singleProject()
@@ -47,11 +52,25 @@ class MarketplaceSandboxSmokeTest {
                     ?: error("Fixture file was not found in the opened test project")
                 val editorManager = service(FileEditorManager::class, project)
 
-                editorManager.openFile(certificateFile, true, true)
+                val openedEditors = editorManager.openFile(certificateFile, true, true)
 
                 assertEquals(certificateFile.getPath(), editorManager.getCurrentFile().getPath())
+                assertEquals(1, openedEditors.size, "Certificate files should open in a single custom editor")
                 assertNull(editorManager.getSelectedTextEditor(), "Certificate files must not open in the default text editor")
             }
+
+            val uiRobot = ui
+            uiRobot.x { byVisibleText("Certificate Analysis") }
+            uiRobot.x { byVisibleText("Main Certificate") }
+            uiRobot.x { byVisibleText("Subject") }
+            uiRobot.x { byVisibleText("Issuer") }
+            uiRobot.x { byVisibleText("Serial") }
+            uiRobot.x { byVisibleText("SHA-256") }
+            uiRobot.x { byVisibleText("CN=Test Certificate,O=Certificate Viewer,C=US") }
+            assertTrue(
+                uiRobot.xx { byVisibleText("Error loading certificate") }.list().isEmpty(),
+                "The certificate viewer must render the fixture without an error state",
+            )
         }
     }
 

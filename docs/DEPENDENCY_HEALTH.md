@@ -10,7 +10,11 @@ upgrade.
 - Dependabot checks Gradle and GitHub Actions dependencies every day.
 - Dependabot security alerts are enabled for the repository.
 - Secret scanning and push protection are enabled for the repository.
-- Pull requests run dependency review, CodeQL, GitGuardian, and a Gradle build.
+- Pull requests run dependency review, CodeQL, and a Gradle build.
+- The UI Integration workflow runs `validateFunctional` as an experimental,
+  non-blocking signal for parser, editor, build, and sandbox coverage.
+- GitGuardian is treated as an external repository/app check when enabled; it is
+  not implemented by a workflow file in this repository.
 - High-severity dependency review findings fail pull requests.
 
 ## Version Notes

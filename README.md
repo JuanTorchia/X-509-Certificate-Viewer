@@ -140,8 +140,12 @@ conservative:
 - Dependabot checks Gradle and GitHub Actions dependencies daily.
 - Dependency Review blocks high-severity dependency findings in PRs.
 - CodeQL analyzes Java/Kotlin code.
-- GitGuardian checks for leaked secrets.
 - Gradle build and tests run in CI.
+- UI Integration runs the full `validateFunctional` gate as an experimental,
+  non-blocking signal while the IntelliJ sandbox test is stabilized.
+- Secret scanning and push protection are expected at the repository level;
+  GitGuardian may also appear as an external app check when enabled by the
+  repository owner.
 - Real private keys, customer certificates, keystores, signing credentials, and
   Marketplace tokens must never be committed.
 

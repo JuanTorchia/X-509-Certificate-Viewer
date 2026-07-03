@@ -71,6 +71,13 @@ Build the plugin:
 .\scripts\dev-env.ps1 .\gradlew.bat build
 ```
 
+Run the full functional gate before PRs that touch the editor UI, supported
+formats, screenshots, or IntelliJ integration:
+
+```powershell
+.\scripts\dev-env.ps1 .\gradlew.bat validateFunctional --no-daemon
+```
+
 Run Gradle commands one at a time on Windows. Parallel Gradle invocations can
 lock Kotlin incremental compilation caches and produce `AccessDeniedException`
 errors under `build\kotlin\...`.

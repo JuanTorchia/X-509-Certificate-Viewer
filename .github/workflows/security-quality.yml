@@ -9,6 +9,12 @@ on:
       - 'gradle/**'
       - 'gradlew'
       - 'gradlew.bat'
+      - 'scripts/**'
+      - 'docs/**'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+      - 'SECURITY.md'
+      - '.github/dependabot.yml'
       - '.github/workflows/**'
   push:
     branches: [ "main" ]
@@ -19,6 +25,12 @@ on:
       - 'gradle/**'
       - 'gradlew'
       - 'gradlew.bat'
+      - 'scripts/**'
+      - 'docs/**'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+      - 'SECURITY.md'
+      - '.github/dependabot.yml'
       - '.github/workflows/**'
   schedule:
     - cron: '24 9 * * 1'

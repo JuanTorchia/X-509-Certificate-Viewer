@@ -1,0 +1,43 @@
+name: UI Integration
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+      - 'gradle/**'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - 'scripts/**'
+      - '.github/workflows/ui-integration.yml'
+  schedule:
+    - cron: '37 10 * * 2'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-functional:
+    name: Validate Functional (experimental)
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Run parser, build, and IntelliJ UI sandbox validation
+        run: |
+          chmod +x gradlew
+          xvfb-run --auto-servernum ./gradlew validateFunctional --no-daemon --stacktrace

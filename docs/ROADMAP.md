@@ -35,7 +35,9 @@ security-adjacent tool, and easy for outside contributors to improve.
   inputs.
 - Avoid holding keystore passwords longer than needed.
 - Keep dependency security automation on by default: Dependabot, Dependency
-  Review, CodeQL, GitGuardian, and Gradle build checks.
+  Review, CodeQL, Gradle build checks, and repository-level secret scanning.
+- Stabilize the experimental UI Integration workflow before making
+  `validateFunctional` a required pull request check.
 
 ## Contributor Experience
 

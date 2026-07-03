@@ -31,15 +31,29 @@ On Windows, use the repo-local environment script so Gradle runs with JDK 21:
 ./scripts/dev-env.ps1 ./gradlew.bat build
 ```
 
-Before asking for review on parser, editor, or supported-format changes, run
-the functional validation gate:
+Use the narrowest validation that proves the change:
+
+```powershell
+# Parser-only changes
+./scripts/dev-env.ps1 ./gradlew.bat test --no-daemon
+
+# Plugin metadata, build, or dependency changes
+./scripts/dev-env.ps1 ./gradlew.bat build --no-daemon
+
+# UI, editor provider, supported format, or screenshot changes
+./scripts/dev-env.ps1 ./gradlew.bat validateFunctional --no-daemon
+```
+
+The full functional validation gate runs parser tests, the IntelliJ
+Starter/Driver UI integration test, and the plugin build:
 
 ```powershell
 ./scripts/dev-env.ps1 ./gradlew.bat validateFunctional --no-daemon
 ```
 
-This runs parser tests, the IntelliJ Starter/Driver UI integration test, and
-the plugin build.
+CI also runs an experimental UI Integration workflow for `validateFunctional`.
+It is intentionally non-blocking until the sandbox test is stable enough to make
+required.
 
 See [`docs/DEVELOPMENT_WINDOWS.md`](docs/DEVELOPMENT_WINDOWS.md) for the full
 Windows setup.
