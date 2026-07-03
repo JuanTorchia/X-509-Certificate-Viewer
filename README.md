@@ -4,16 +4,20 @@
 [![JetBrains Downloads](https://img.shields.io/jetbrains/plugin/d/30727?style=flat-square&logo=jetbrains&label=downloads)](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer)
 [![Build](https://img.shields.io/github/actions/workflow/status/JuanTorchia/X-509-Certificate-Viewer/intellij-publish.yml?branch=main&style=flat-square&label=build)](https://github.com/JuanTorchia/X-509-Certificate-Viewer/actions/workflows/intellij-publish.yml)
 [![Security & Quality](https://img.shields.io/github/actions/workflow/status/JuanTorchia/X-509-Certificate-Viewer/security-quality.yml?branch=main&style=flat-square&label=security)](https://github.com/JuanTorchia/X-509-Certificate-Viewer/actions/workflows/security-quality.yml)
+[![UI Integration](https://img.shields.io/github/actions/workflow/status/JuanTorchia/X-509-Certificate-Viewer/ui-integration.yml?branch=main&style=flat-square&label=ui%20integration)](https://github.com/JuanTorchia/X-509-Certificate-Viewer/actions/workflows/ui-integration.yml)
 [![License](https://img.shields.io/github/license/JuanTorchia/X-509-Certificate-Viewer?style=flat-square)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/JuanTorchia/X-509-Certificate-Viewer?style=social)](https://github.com/JuanTorchia/X-509-Certificate-Viewer/stargazers)
 
-Inspect X.509 certificates and Java keystores directly inside IntelliJ-based
-IDEs. This plugin is part of Juan Torchia's public engineering lab around
-secure systems, digital trust, PKI workflows, and developer tooling that works
+Inspect X.509 certificates and Java keystores inside IntelliJ without leaving
+the IDE. This plugin is part of Juan Torchia's public engineering lab around
+secure systems, digital trust, PKI workflows, and developer tooling that stays
 close to real production inputs.
 
 [Install from JetBrains Marketplace](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer)
+· [Star the repo](https://github.com/JuanTorchia/X-509-Certificate-Viewer)
 · [Report an issue](https://github.com/JuanTorchia/X-509-Certificate-Viewer/issues)
 · [Contribute](CONTRIBUTING.md)
+· [Roadmap discussion](https://github.com/JuanTorchia/X-509-Certificate-Viewer/discussions/24)
 · [juanchi.dev](https://juanchi.dev/en)
 
 ## Why This Exists
@@ -49,6 +53,16 @@ Related tooling from the same public lab:
 - [HAProxy Config for VS Code](https://github.com/JuanTorchia/gmm-haproxy-vscode)
   for production-shaped HAProxy config editing.
 
+## Screenshots
+
+Marketplace and README screenshots are generated from safe demo certificates
+and keystores, not from a maintainer's personal IDE or real customer material.
+
+Screenshot automation is tracked in
+[#17](https://github.com/JuanTorchia/X-509-Certificate-Viewer/issues/17), and
+the first README/Marketplace image batch is tracked in
+[#14](https://github.com/JuanTorchia/X-509-Certificate-Viewer/issues/14).
+
 ## Supported Formats
 
 Current IntelliJ file associations:
@@ -79,6 +93,8 @@ polishing Marketplace metadata, and keeping the contributor workflow simple.
 Active work is tracked in:
 
 - [Roadmap](docs/ROADMAP.md)
+- [Public contributor readiness milestone](https://github.com/JuanTorchia/X-509-Certificate-Viewer/milestone/1)
+- [Roadmap discussion](https://github.com/JuanTorchia/X-509-Certificate-Viewer/discussions/24)
 - [Open issues](https://github.com/JuanTorchia/X-509-Certificate-Viewer/issues)
 - [Dependency health policy](docs/DEPENDENCY_HEALTH.md)
 - [Marketplace screenshot workflow](docs/MARKETPLACE_SCREENSHOTS.md)
@@ -163,6 +179,13 @@ certificate formats affected. Good first contributions include:
 - UI polish with before/after screenshots
 - Marketplace and documentation improvements
 - compatibility checks for newer JetBrains IDE builds
+
+Current contributor entry points:
+
+- [Good first issues](https://github.com/JuanTorchia/X-509-Certificate-Viewer/labels/good%20first%20issue)
+- [Help wanted issues](https://github.com/JuanTorchia/X-509-Certificate-Viewer/labels/help%20wanted)
+- [Public contributor readiness milestone](https://github.com/JuanTorchia/X-509-Certificate-Viewer/milestone/1)
+- [Roadmap discussion](https://github.com/JuanTorchia/X-509-Certificate-Viewer/discussions/24)
 
 Start with [CONTRIBUTING.md](CONTRIBUTING.md) and look for
 [`good first issue`](https://github.com/JuanTorchia/X-509-Certificate-Viewer/labels/good%20first%20issue)
