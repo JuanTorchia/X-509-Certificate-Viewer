@@ -7,14 +7,14 @@ $ErrorActionPreference = "Stop"
 
 $candidatePaths = @()
 
-if ($env:CERT_VIEWER_JDK17) {
-    $candidatePaths += $env:CERT_VIEWER_JDK17
+if ($env:CERT_VIEWER_JDK21) {
+    $candidatePaths += $env:CERT_VIEWER_JDK21
 }
 
 $candidatePaths += @(
-    "$env:USERPROFILE\scoop\apps\temurin17-jdk\current",
-    "$env:ProgramFiles\Eclipse Adoptium\jdk-17",
-    "$env:ProgramFiles\Java\jdk-17"
+    "$env:USERPROFILE\scoop\apps\temurin21-jdk\current",
+    "$env:ProgramFiles\Eclipse Adoptium\jdk-21",
+    "$env:ProgramFiles\Java\jdk-21"
 )
 
 $jdkHome = $candidatePaths |
@@ -22,7 +22,7 @@ $jdkHome = $candidatePaths |
     Select-Object -First 1
 
 if (-not $jdkHome) {
-    Write-Error "JDK 17 not found. Install it with: scoop install temurin17-jdk"
+    Write-Error "JDK 21 not found. Install it with: scoop install temurin21-jdk"
 }
 
 $env:JAVA_HOME = $jdkHome

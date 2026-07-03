@@ -24,12 +24,36 @@ Good first contribution areas:
 
 ## Local setup
 
-On Windows, use the repo-local environment script so Gradle runs with JDK 17:
+On Windows, use the repo-local environment script so Gradle runs with JDK 21:
 
 ```powershell
 ./scripts/dev-env.ps1 ./gradlew.bat test
 ./scripts/dev-env.ps1 ./gradlew.bat build
 ```
+
+Use the narrowest validation that proves the change:
+
+```powershell
+# Parser-only changes
+./scripts/dev-env.ps1 ./gradlew.bat test --no-daemon
+
+# Plugin metadata, build, or dependency changes
+./scripts/dev-env.ps1 ./gradlew.bat build --no-daemon
+
+# UI, editor provider, supported format, or screenshot changes
+./scripts/dev-env.ps1 ./gradlew.bat validateFunctional --no-daemon
+```
+
+The full functional validation gate runs parser tests, the IntelliJ
+Starter/Driver UI integration test, and the plugin build:
+
+```powershell
+./scripts/dev-env.ps1 ./gradlew.bat validateFunctional --no-daemon
+```
+
+CI also runs an experimental UI Integration workflow for `validateFunctional`.
+It is intentionally non-blocking until the sandbox test is stable enough to make
+required.
 
 See [`docs/DEVELOPMENT_WINDOWS.md`](docs/DEVELOPMENT_WINDOWS.md) for the full
 Windows setup.
@@ -61,7 +85,7 @@ Good issues include:
 ## Pull request checklist
 
 - [ ] The PR has one clear scope.
-- [ ] Tests or manual validation are documented.
+- [ ] `validateFunctional` or the relevant narrower validation is documented.
 - [ ] Security-sensitive behavior is described.
 - [ ] Docs were updated when user-facing behavior changed.
 - [ ] No secrets, private certificates, or generated build outputs are included.

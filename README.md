@@ -81,15 +81,16 @@ Active work is tracked in:
 - [Roadmap](docs/ROADMAP.md)
 - [Open issues](https://github.com/JuanTorchia/X-509-Certificate-Viewer/issues)
 - [Dependency health policy](docs/DEPENDENCY_HEALTH.md)
+- [Marketplace screenshot workflow](docs/MARKETPLACE_SCREENSHOTS.md)
 
 ## Build From Source
 
 Requirements:
 
-- JDK 17
+- JDK 21
 - IntelliJ Platform Gradle Plugin 2.x
 - Gradle 9.x through the included wrapper
-- IntelliJ Platform 2023.3 or newer
+- IntelliJ Platform 2026.1.x
 
 Build:
 
@@ -97,10 +98,17 @@ Build:
 ./gradlew build
 ```
 
-On Windows, prefer the repo-local environment script so Gradle uses JDK 17:
+On Windows, prefer the repo-local environment script so Gradle uses JDK 21:
 
 ```powershell
 .\scripts\dev-env.ps1 .\gradlew.bat build --no-daemon
+```
+
+Full functional validation, including parser tests, IntelliJ UI integration,
+and plugin build:
+
+```powershell
+.\scripts\dev-env.ps1 .\gradlew.bat validateFunctional --no-daemon
 ```
 
 The plugin ZIP is generated under:
@@ -132,8 +140,12 @@ conservative:
 - Dependabot checks Gradle and GitHub Actions dependencies daily.
 - Dependency Review blocks high-severity dependency findings in PRs.
 - CodeQL analyzes Java/Kotlin code.
-- GitGuardian checks for leaked secrets.
 - Gradle build and tests run in CI.
+- UI Integration runs the full `validateFunctional` gate as an experimental,
+  non-blocking signal while the IntelliJ sandbox test is stabilized.
+- Secret scanning and push protection are expected at the repository level;
+  GitGuardian may also appear as an external app check when enabled by the
+  repository owner.
 - Real private keys, customer certificates, keystores, signing credentials, and
   Marketplace tokens must never be committed.
 

@@ -8,6 +8,7 @@ security-adjacent tool, and easy for outside contributors to improve.
 
 - Add Marketplace-ready screenshots and keep them in sync with the plugin UI.
 - Keep reusable Marketplace copy in `docs/MARKETPLACE_COPY.md`.
+- Keep screenshot generation reproducible with generated demo fixtures.
 - Keep GitHub repository metadata aligned with the JetBrains plugin positioning:
   IntelliJ, JetBrains, PKI, X.509, Java keystores, digital trust.
 - Maintain clear README sections for installation, supported formats, security
@@ -34,7 +35,9 @@ security-adjacent tool, and easy for outside contributors to improve.
   inputs.
 - Avoid holding keystore passwords longer than needed.
 - Keep dependency security automation on by default: Dependabot, Dependency
-  Review, CodeQL, GitGuardian, and Gradle build checks.
+  Review, CodeQL, Gradle build checks, and repository-level secret scanning.
+- Stabilize the experimental UI Integration workflow before making
+  `validateFunctional` a required pull request check.
 
 ## Contributor Experience
 

@@ -8,8 +8,9 @@
 
 ## Validation
 
-- [ ] IntelliJ: `./gradlew test`
-- [ ] IntelliJ: `./gradlew build`
+- [ ] Parser-only change: `.\scripts\dev-env.ps1 .\gradlew.bat test --no-daemon`
+- [ ] Plugin/build change: `.\scripts\dev-env.ps1 .\gradlew.bat build --no-daemon`
+- [ ] UI/editor/screenshot change: `.\scripts\dev-env.ps1 .\gradlew.bat validateFunctional --no-daemon`
 - [ ] Manual validation documented below
 
 ## Security and parser impact

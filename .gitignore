@@ -9,6 +9,7 @@ out/
 .gradle/
 build/
 .intellijPlatform/
+allure-results/
 
 # Kotlin
 bin/
