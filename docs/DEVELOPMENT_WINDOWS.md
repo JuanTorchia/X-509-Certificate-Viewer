@@ -78,6 +78,18 @@ formats, screenshots, or IntelliJ integration:
 .\scripts\dev-env.ps1 .\gradlew.bat validateFunctional --no-daemon
 ```
 
+Run JetBrains Plugin Verifier before PRs that touch `plugin.xml`, IntelliJ
+extension registrations, dependency compatibility, or Marketplace compatibility
+warnings:
+
+```powershell
+.\scripts\dev-env.ps1 .\gradlew.bat verifyPlugin --no-daemon
+```
+
+The verifier is configured against IntelliJ IDEA Ultimate 2026.1.4 because that
+is the Marketplace compatibility report version currently being tracked. This
+command may download IDE artifacts and can be slower than normal build checks.
+
 Run Gradle commands one at a time on Windows. Parallel Gradle invocations can
 lock Kotlin incremental compilation caches and produce `AccessDeniedException`
 errors under `build\kotlin\...`.

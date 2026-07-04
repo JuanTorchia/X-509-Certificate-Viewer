@@ -13,6 +13,9 @@ upgrade.
 - Pull requests run dependency review, CodeQL, and a Gradle build.
 - The UI Integration workflow runs `validateFunctional` as an experimental,
   non-blocking signal for parser, editor, build, and sandbox coverage.
+- JetBrains Plugin Verifier is configured locally for IntelliJ IDEA Ultimate
+  2026.1.4 compatibility checks and should be run for plugin metadata,
+  IntelliJ extension, or Marketplace compatibility changes.
 - GitGuardian is treated as an external repository/app check when enabled; it is
   not implemented by a workflow file in this repository.
 - High-severity dependency review findings fail pull requests.
@@ -46,4 +49,5 @@ pull request.
 gh api repos/JuanTorchia/X-509-Certificate-Viewer/dependabot/alerts
 gh pr list --state open --author app/dependabot
 .\scripts\dev-env.ps1 .\gradlew.bat build --no-daemon
+.\scripts\dev-env.ps1 .\gradlew.bat verifyPlugin --no-daemon
 ```

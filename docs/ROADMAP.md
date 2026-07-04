@@ -1,6 +1,6 @@
 # Roadmap
 
-This roadmap tracks the work needed to make X.509 Certificate Viewer for
+This roadmap tracks the work needed to make CertView X.509 for
 IntelliJ useful for real certificate-heavy projects, trustworthy as a
 security-adjacent tool, and easy for outside contributors to improve.
 
