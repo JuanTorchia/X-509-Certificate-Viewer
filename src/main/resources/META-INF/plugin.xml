@@ -25,12 +25,6 @@
 
     <!-- Support for dynamic loading (no restart required) -->
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="X509 Certificate Viewer" 
-                    secondary="true" 
-                    icon="AllIcons.General.ExternalTools" 
-                    anchor="right" 
-                    factoryClass="com.architect.certviewer.ViewerToolWindowFactory"/>
-                    
         <fileEditorProvider implementation="com.architect.certviewer.ViewerEditorProvider"/>
         
         <fileType name="Certificate File" 
