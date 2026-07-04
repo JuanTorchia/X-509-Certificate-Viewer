@@ -42,6 +42,9 @@ Use the narrowest validation that proves the change:
 
 # UI, editor provider, supported format, or screenshot changes
 ./scripts/dev-env.ps1 ./gradlew.bat validateFunctional --no-daemon
+
+# plugin.xml, IntelliJ extension, or Marketplace compatibility changes
+./scripts/dev-env.ps1 ./gradlew.bat verifyPlugin --no-daemon
 ```
 
 The full functional validation gate runs parser tests, the IntelliJ
