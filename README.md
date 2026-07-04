@@ -1,4 +1,4 @@
-# X.509 Certificate Viewer for IntelliJ
+# CertView X.509
 
 [![JetBrains Plugin](https://img.shields.io/jetbrains/plugin/v/30727?style=flat-square&logo=jetbrains&label=JetBrains%20Marketplace)](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer)
 [![JetBrains Downloads](https://img.shields.io/jetbrains/plugin/d/30727?style=flat-square&logo=jetbrains&label=downloads)](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer)
@@ -24,7 +24,7 @@ close to real production inputs.
 
 Certificate-heavy Java projects often force developers to leave the IDE for
 terminal glue: `openssl`, `keytool`, temporary dumps, copied passwords, and
-half-remembered commands. X.509 Certificate Viewer keeps the inspection loop
+half-remembered commands. CertView X.509 keeps the inspection loop
 inside JetBrains IDEs while staying explicit about what it does and does not do.
 
 Use it when you need to quickly inspect:
@@ -44,7 +44,7 @@ The plugin is published on JetBrains Marketplace:
 
 | Product | What it does | Live signal |
 | --- | --- | --- |
-| [X.509 Certificate Viewer for IntelliJ](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer) | Inspect X.509 certificates and Java keystores inside IntelliJ-based IDEs. | ![version](https://img.shields.io/jetbrains/plugin/v/30727?style=flat-square&logo=jetbrains&label=version) ![downloads](https://img.shields.io/jetbrains/plugin/d/30727?style=flat-square&logo=jetbrains&label=downloads) |
+| [CertView X.509](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer) | Inspect X.509 certificates and Java keystores inside IntelliJ-based IDEs. | ![version](https://img.shields.io/jetbrains/plugin/v/30727?style=flat-square&logo=jetbrains&label=version) ![downloads](https://img.shields.io/jetbrains/plugin/d/30727?style=flat-square&logo=jetbrains&label=downloads) |
 
 Related tooling from the same public lab:
 

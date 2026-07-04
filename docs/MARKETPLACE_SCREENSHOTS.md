@@ -17,7 +17,7 @@ certificate material.
   invalid screenshot targets.
 - The capture script intentionally ignores unrelated IntelliJ windows. A valid
   target window title must reference `demo-certificate`, `demo-keystore`, or
-  `X.509 Certificate Viewer`.
+  `CertView X.509`.
 - JetBrains Starter + Driver remains the preferred next step for finer UI
   interaction and deterministic editor selection.
 - `integrationTest` provides the first sandbox smoke-test entry point for
