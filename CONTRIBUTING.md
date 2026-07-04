@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve X.509 Certificate Viewer for IntelliJ. This is a
+Thanks for helping improve CertView X.509 for IntelliJ. This is a
 security-adjacent developer tool from Juan Torchia's public engineering lab, so
 contributions should be practical, testable, and careful about real-world PKI
 inputs.

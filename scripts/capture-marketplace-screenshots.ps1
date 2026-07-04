@@ -69,7 +69,7 @@ function New-DemoFixtures {
         "-keyalg", "RSA",
         "-keysize", "2048",
         "-validity", "365",
-        "-dname", "CN=Marketplace Demo,O=X.509 Certificate Viewer,L=Buenos Aires,C=AR",
+        "-dname", "CN=Marketplace Demo,O=CertView X.509,L=Buenos Aires,C=AR",
         "-storetype", "PKCS12",
         "-keystore", $pkcs12,
         "-storepass", $password,
@@ -109,7 +109,7 @@ function New-DemoFixtures {
     )
 
     @"
-X.509 Certificate Viewer marketplace demo project.
+CertView X.509 marketplace demo project.
 
 All files under fixtures/ are generated demo inputs.
 Password for demo keystores: $password
@@ -287,7 +287,7 @@ if (-not $window) {
         throw "IntelliJ first-run window detected ('$($firstRunWindow.Title)'). Complete the sandbox first-run setup, then retry with -SkipLaunch. This setup screen is not a valid Marketplace screenshot."
     }
 
-    throw "No demo IntelliJ window found. Expected a window title containing demo-certificate, demo-keystore, or X.509 Certificate Viewer. Increase -StartupDelaySeconds or open the sandbox demo file before retrying with -SkipLaunch."
+    throw "No demo IntelliJ window found. Expected a window title containing demo-certificate, demo-keystore, CertView X.509, or X.509 Certificate Viewer. Increase -StartupDelaySeconds or open the sandbox demo file before retrying with -SkipLaunch."
 }
 
 Write-Host "Capturing window: $($window.Title)"
