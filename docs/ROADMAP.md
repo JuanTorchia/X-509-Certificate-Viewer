@@ -50,7 +50,8 @@ security-adjacent tool, and easy for outside contributors to improve.
 
 ## Release And Marketplace Readiness
 
-- Publish only from protected release paths with required secrets.
+- Publish only from the protected GitHub Release path documented in
+  `docs/RELEASE_POLICY.md`; merging to `main` must stay validation-only.
 - Document JetBrains Marketplace secrets and signing expectations.
 - Add release notes once the plugin starts receiving regular Marketplace
   updates.

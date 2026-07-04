@@ -19,6 +19,9 @@ upgrade.
 - GitGuardian is treated as an external repository/app check when enabled; it is
   not implemented by a workflow file in this repository.
 - High-severity dependency review findings fail pull requests.
+- Dependency or build-tool merges to `main` do not publish a Marketplace update.
+  Publishing is restricted to the release process documented in
+  `docs/RELEASE_POLICY.md`.
 
 ## Version Notes
 

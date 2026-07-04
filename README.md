@@ -2,7 +2,7 @@
 
 [![JetBrains Plugin](https://img.shields.io/jetbrains/plugin/v/30727?style=flat-square&logo=jetbrains&label=JetBrains%20Marketplace)](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer)
 [![JetBrains Downloads](https://img.shields.io/jetbrains/plugin/d/30727?style=flat-square&logo=jetbrains&label=downloads)](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer)
-[![Build](https://img.shields.io/github/actions/workflow/status/JuanTorchia/X-509-Certificate-Viewer/intellij-publish.yml?branch=main&style=flat-square&label=build)](https://github.com/JuanTorchia/X-509-Certificate-Viewer/actions/workflows/intellij-publish.yml)
+[![Build](https://img.shields.io/github/actions/workflow/status/JuanTorchia/X-509-Certificate-Viewer/intellij-build.yml?branch=main&style=flat-square&label=build)](https://github.com/JuanTorchia/X-509-Certificate-Viewer/actions/workflows/intellij-build.yml)
 [![Security & Quality](https://img.shields.io/github/actions/workflow/status/JuanTorchia/X-509-Certificate-Viewer/security-quality.yml?branch=main&style=flat-square&label=security)](https://github.com/JuanTorchia/X-509-Certificate-Viewer/actions/workflows/security-quality.yml)
 [![UI Integration](https://img.shields.io/github/actions/workflow/status/JuanTorchia/X-509-Certificate-Viewer/ui-integration.yml?branch=main&style=flat-square&label=ui%20integration)](https://github.com/JuanTorchia/X-509-Certificate-Viewer/actions/workflows/ui-integration.yml)
 [![License](https://img.shields.io/github/license/JuanTorchia/X-509-Certificate-Viewer?style=flat-square)](LICENSE)
@@ -17,6 +17,7 @@ close to real production inputs.
 · [Star the repo](https://github.com/JuanTorchia/X-509-Certificate-Viewer)
 · [Report an issue](https://github.com/JuanTorchia/X-509-Certificate-Viewer/issues)
 · [Contribute](CONTRIBUTING.md)
+· [Wiki](https://github.com/JuanTorchia/X-509-Certificate-Viewer/wiki)
 · [Roadmap discussion](https://github.com/JuanTorchia/X-509-Certificate-Viewer/discussions/24)
 · [juanchi.dev](https://juanchi.dev/en)
 
@@ -97,8 +98,10 @@ Active work is tracked in:
 - [Roadmap](docs/ROADMAP.md)
 - [Public contributor readiness milestone](https://github.com/JuanTorchia/X-509-Certificate-Viewer/milestone/1)
 - [Roadmap discussion](https://github.com/JuanTorchia/X-509-Certificate-Viewer/discussions/24)
+- [Project wiki](https://github.com/JuanTorchia/X-509-Certificate-Viewer/wiki)
 - [Open issues](https://github.com/JuanTorchia/X-509-Certificate-Viewer/issues)
 - [Dependency health policy](docs/DEPENDENCY_HEALTH.md)
+- [Release policy](docs/RELEASE_POLICY.md)
 - [Marketplace screenshot workflow](docs/MARKETPLACE_SCREENSHOTS.md)
 
 ## Build From Source
@@ -146,7 +149,7 @@ Full Windows setup is documented in
 | `src/test/kotlin/` | Parser and plugin tests. |
 | `src/main/resources/META-INF/plugin.xml` | JetBrains plugin metadata and extension registrations. |
 | `build.gradle.kts` | Gradle build for the plugin. |
-| `.github/workflows/` | CI, security, quality, and publishing workflows. |
+| `.github/workflows/` | CI, security, quality, and release workflows. |
 | `.github/dependabot.yml` | Daily dependency update automation for Gradle and GitHub Actions. |
 | `docs/` | Development, roadmap, and dependency health notes. |
 
@@ -159,6 +162,8 @@ conservative:
 - Dependency Review blocks high-severity dependency findings in PRs.
 - CodeQL analyzes Java/Kotlin code.
 - Gradle build and tests run in CI.
+- Merging to `main` does not publish to JetBrains Marketplace; releases follow
+  the explicit [release policy](docs/RELEASE_POLICY.md).
 - UI Integration runs the full `validateFunctional` gate as an experimental,
   non-blocking signal while the IntelliJ sandbox test is stabilized.
 - Certificate and keystore inputs have explicit size limits and oversized
