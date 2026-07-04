@@ -92,6 +92,7 @@ tasks.register("verifyIdePluginLogs") {
         }
 
         val pluginErrorPatterns = listOf(
+            "Plugin to blame: CertView X.509",
             "Plugin to blame: X.509 Certificate Viewer",
             "[Plugin: com.architect.certviewer]",
             "SEVERE - #com.architect.certviewer",

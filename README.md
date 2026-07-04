@@ -46,13 +46,6 @@ The plugin is published on JetBrains Marketplace:
 | --- | --- | --- |
 | [CertView X.509](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer) | Inspect X.509 certificates and Java keystores inside IntelliJ-based IDEs. | ![version](https://img.shields.io/jetbrains/plugin/v/30727?style=flat-square&logo=jetbrains&label=version) ![downloads](https://img.shields.io/jetbrains/plugin/d/30727?style=flat-square&logo=jetbrains&label=downloads) |
 
-Related tooling from the same public lab:
-
-- [CertView for VS Code](https://github.com/JuanTorchia/certificate-viewer-open-vscode)
-  for X.509, CSR, CRL, key, chain, and keystore inspection in VS Code.
-- [HAProxy Config for VS Code](https://github.com/JuanTorchia/gmm-haproxy-vscode)
-  for production-shaped HAProxy config editing.
-
 ## Screenshots
 
 Marketplace and README screenshots are generated from safe demo certificates

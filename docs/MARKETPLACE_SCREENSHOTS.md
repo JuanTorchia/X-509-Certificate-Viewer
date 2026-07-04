@@ -84,9 +84,9 @@ certificates, or production keystores.
 ## Future Improvement
 
 The next version should add JetBrains Starter + Driver integration tests. The
-target test should mirror the VS Code extension workflow: open generated
-certificate and keystore fixtures as a user would, then assert that the custom
-viewer/editor appears instead of a plain text editor or generic IDE fallback.
+target test should open generated certificate and keystore fixtures as a user
+would, then assert that the custom viewer/editor appears instead of a plain text
+editor or generic IDE fallback.
 
 That same Driver foundation should later select the expected IDE window/editor
 and capture more deterministic screenshots. JetBrains documents the Driver
