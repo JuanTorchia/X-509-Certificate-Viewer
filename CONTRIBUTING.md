@@ -79,6 +79,8 @@ Windows setup.
 - For UI changes, include screenshots or a short before/after description.
 - For publishing or CI changes, include the exact command or workflow path that
   was validated.
+- Normal pull requests must not publish to JetBrains Marketplace. Releases are
+  maintainer-owned and follow [`docs/RELEASE_POLICY.md`](docs/RELEASE_POLICY.md).
 
 ## Issue quality
 
