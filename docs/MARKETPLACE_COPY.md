@@ -5,8 +5,7 @@ aligned with `README.md` and `src/main/resources/META-INF/plugin.xml`.
 
 ## Short Description
 
-Inspect X.509 certificates and Java keystores directly inside IntelliJ-based
-IDEs.
+Inspect X.509 certificates and Java keystores inside IntelliJ-based IDEs.
 
 ## Long Description
 
@@ -43,6 +42,17 @@ policy decisions.
   inspection.
 - Explicitly scoped as an inspection aid, not a certificate trust or revocation
   validation engine.
+
+## Marketplace Feature Bullets
+
+- Open PEM, DER, CRT, and CER certificate files from the Project view.
+- Inspect PKCS#12, JKS, and JCEKS keystores used by Java services and
+  integrations.
+- Review subject, issuer, serial number, validity dates, and common certificate
+  fields in a native IntelliJ editor tab.
+- Prompt for keystore passwords when protected stores require them.
+- Keep local certificate inspection inside the IDE without terminal glue or
+  temporary certificate dumps.
 
 ## Tags
 
