@@ -14,6 +14,14 @@ updates:
       gradle-dependencies:
         patterns:
           - "*"
+    # CodeQL's Java extractor does not support Kotlin 2.4.x yet, so these
+    # updates break the CodeQL workflow (see PR #36: "Kotlin version 2.4.10
+    # is too recent"). Drop this ignore once CodeQL adds support.
+    ignore:
+      - dependency-name: "org.jetbrains.kotlin.jvm"
+        versions: ["2.4.x"]
+      - dependency-name: "org.jetbrains.kotlin:kotlin-stdlib"
+        versions: ["2.4.x"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
