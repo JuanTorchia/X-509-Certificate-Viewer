@@ -108,11 +108,16 @@ class CertificateFileEditor(private val file: VirtualFile) : UserDataHolderBase(
                     view.displayCertificates(certs)
                 }
             } else {
-                val cert = parser.parseDer(content) ?: parser.parseCertificate(String(content))
-                if (cert != null) {
-                    view.displayCertificate(cert)
+                val derCert = parser.parseDer(content)
+                if (derCert != null) {
+                    view.displayCertificate(derCert)
                 } else {
-                    view.displayError("Unsupported file format or invalid certificate")
+                    val certs = parser.parseCertificates(String(content))
+                    if (certs.isNotEmpty()) {
+                        view.displayCertificates(certs)
+                    } else {
+                        view.displayError("Unsupported file format or invalid certificate")
+                    }
                 }
             }
         } catch (e: Exception) {

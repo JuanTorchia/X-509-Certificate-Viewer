@@ -163,6 +163,18 @@ class CertificateDetailView {
         addRow("Serial", cert.serialNumber.toString(16).uppercase())
         addRow("SHA-256", parser.getFingerprint(cert, "SHA-256"))
 
+        // Common X.509 extensions, shown only when present. Read-only
+        // metadata: no trust, path, or revocation validation is implied.
+        parser.getSubjectAlternativeNames(cert).takeIf { it.isNotEmpty() }
+            ?.let { addRow("Subject Alt Names", it.joinToString(", ")) }
+        parser.getKeyUsageLabels(cert).takeIf { it.isNotEmpty() }
+            ?.let { addRow("Key Usage", it.joinToString(", ")) }
+        parser.getExtendedKeyUsageLabels(cert).takeIf { it.isNotEmpty() }
+            ?.let { addRow("Extended Key Usage", it.joinToString(", ")) }
+        parser.getBasicConstraintsLabel(cert).let { addRow("Basic Constraints", it) }
+        parser.getSubjectKeyIdentifierHex(cert)
+            ?.let { addRow("Subject Key ID", it) }
+
         // Progress Bar
         val progressPanel = createValidityProgress(cert)
         
