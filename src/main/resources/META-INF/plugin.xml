@@ -1,36 +1,42 @@
-<idea-plugin>
+<idea-plugin url="https://github.com/JuanTorchia/X-509-Certificate-Viewer">
     <id>com.architect.certviewer</id>
-    <name>X.509 Certificate Viewer</name>
+    <name>CertView X.509</name>
     <vendor email="me@juanchi.dev" url="https://juanchi.dev/en">Juan Torchia</vendor>
 
     <description><![CDATA[
     Inspect X.509 certificates and Java keystores directly inside IntelliJ-based IDEs.
-    Built for certificate-heavy Java, PKI, digital identity, and secure backend workflows.
+    <br/><br/>
+    CertView X.509 keeps local certificate inspection close to Java,
+    PKI, digital identity, signing, and secure backend work. Open certificate
+    and keystore files from the Project view and review the metadata developers
+    usually need before reaching for terminal commands.
     <br/><br/>
     Supported inputs include PEM, DER, CRT, CER, PKCS#12, JKS, and JCEKS files.
     <br/><br/>
-    Features:
+    What it shows:
     <ul>
-      <li>Open supported certificate and keystore files from the Project view.</li>
       <li>Inspect subject, issuer, serial number, and validity dates.</li>
-      <li>Prompt for keystore passwords when required.</li>
-      <li>Keep local certificate inspection inside the IDE without terminal glue.</li>
+      <li>Open PEM, DER, CRT, and CER certificate files in a dedicated viewer.</li>
+      <li>Inspect PKCS#12, JKS, and JCEKS keystores with password prompts when required.</li>
+      <li>Keep supported local inputs inside the IDE instead of temporary OpenSSL or keytool dumps.</li>
     </ul>
     <br/>
     This is an inspection tool. It does not replace certificate path validation,
     revocation checks, WebPKI policy validation, or organizational PKI review.
     ]]></description>
 
+    <change-notes><![CDATA[
+    <ul>
+      <li>Improved Marketplace-facing metadata for certificate and keystore workflows.</li>
+      <li>Documented supported formats and inspection scope more explicitly.</li>
+      <li>Added clearer positioning for local X.509, PKI, and secure backend use cases.</li>
+    </ul>
+    ]]></change-notes>
+
     <depends>com.intellij.modules.platform</depends>
 
     <!-- Support for dynamic loading (no restart required) -->
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="X509 Certificate Viewer" 
-                    secondary="true" 
-                    icon="AllIcons.General.ExternalTools" 
-                    anchor="right" 
-                    factoryClass="com.architect.certviewer.ViewerToolWindowFactory"/>
-                    
         <fileEditorProvider implementation="com.architect.certviewer.ViewerEditorProvider"/>
         
         <fileType name="Certificate File" 
@@ -41,7 +47,7 @@
     <actions>
         <action id="com.architect.certviewer.SupportAction" 
                 class="com.architect.certviewer.SupportAction" 
-                text="Support X.509 Certificate Viewer..." 
+                text="Support CertView X.509..." 
                 description="Open sponsorship page"
                 icon="AllIcons.Actions.Suspend">
             <add-to-group group-id="HelpMenu" anchor="last"/>

@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve X.509 Certificate Viewer for IntelliJ. This is a
+Thanks for helping improve CertView X.509 for IntelliJ. This is a
 security-adjacent developer tool from Juan Torchia's public engineering lab, so
 contributions should be practical, testable, and careful about real-world PKI
 inputs.
@@ -42,10 +42,14 @@ Use the narrowest validation that proves the change:
 
 # UI, editor provider, supported format, or screenshot changes
 ./scripts/dev-env.ps1 ./gradlew.bat validateFunctional --no-daemon
+
+# plugin.xml, IntelliJ extension, or Marketplace compatibility changes
+./scripts/dev-env.ps1 ./gradlew.bat verifyPlugin --no-daemon
 ```
 
 The full functional validation gate runs parser tests, the IntelliJ
-Starter/Driver UI integration test, and the plugin build:
+Starter/Driver UI integration test, checks IntelliJ sandbox logs for errors
+blamed on this plugin, and builds the plugin:
 
 ```powershell
 ./scripts/dev-env.ps1 ./gradlew.bat validateFunctional --no-daemon
@@ -54,6 +58,11 @@ Starter/Driver UI integration test, and the plugin build:
 CI also runs an experimental UI Integration workflow for `validateFunctional`.
 It is intentionally non-blocking until the sandbox test is stable enough to make
 required.
+
+If IntelliJ shows a bottom-right IDE error notification while testing this
+plugin, treat it as a bug until the sandbox logs prove otherwise. The
+`validateFunctional` gate is expected to catch plugin-blamed IDE log errors such
+as deprecated `FileEditor` contract violations.
 
 See [`docs/DEVELOPMENT_WINDOWS.md`](docs/DEVELOPMENT_WINDOWS.md) for the full
 Windows setup.
@@ -70,6 +79,8 @@ Windows setup.
 - For UI changes, include screenshots or a short before/after description.
 - For publishing or CI changes, include the exact command or workflow path that
   was validated.
+- Normal pull requests must not publish to JetBrains Marketplace. Releases are
+  maintainer-owned and follow [`docs/RELEASE_POLICY.md`](docs/RELEASE_POLICY.md).
 
 ## Issue quality
 

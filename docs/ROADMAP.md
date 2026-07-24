@@ -1,6 +1,6 @@
 # Roadmap
 
-This roadmap tracks the work needed to make X.509 Certificate Viewer for
+This roadmap tracks the work needed to make CertView X.509 for
 IntelliJ useful for real certificate-heavy projects, trustworthy as a
 security-adjacent tool, and easy for outside contributors to improve.
 
@@ -29,8 +29,8 @@ security-adjacent tool, and easy for outside contributors to improve.
 
 ## Security Hardening
 
-- Define explicit maximum input sizes before parsing certificates and keystores.
-- Reject oversized files before expensive parser work starts.
+- Maintain explicit maximum input sizes before parsing certificates and keystores.
+- Keep oversized file rejection before expensive parser work starts.
 - Show clear IDE errors for unsupported, malformed, encrypted, and oversized
   inputs.
 - Avoid holding keystore passwords longer than needed.
@@ -50,7 +50,8 @@ security-adjacent tool, and easy for outside contributors to improve.
 
 ## Release And Marketplace Readiness
 
-- Publish only from protected release paths with required secrets.
+- Publish only from the protected GitHub Release path documented in
+  `docs/RELEASE_POLICY.md`; merging to `main` must stay validation-only.
 - Document JetBrains Marketplace secrets and signing expectations.
 - Add release notes once the plugin starts receiving regular Marketplace
   updates.

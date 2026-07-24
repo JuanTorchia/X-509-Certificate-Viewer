@@ -83,6 +83,34 @@ class X509ParserServiceTest {
     }
 
     @Test
+    fun returnsNullForOversizedPemBeforeDecoding() {
+        val oversizedPem = "A".repeat(X509ParserService.MAX_CERTIFICATE_BYTES + 1)
+
+        assertNull(parser.parseCertificate(oversizedPem))
+    }
+
+    @Test
+    fun returnsNullForOversizedDer() {
+        val oversizedDer = ByteArray(X509ParserService.MAX_CERTIFICATE_BYTES + 1)
+
+        assertNull(parser.parseDer(oversizedDer))
+    }
+
+    @Test
+    fun rejectsOversizedKeystoreBeforeLoading() {
+        val oversizedKeystore = ByteArray(X509ParserService.MAX_KEYSTORE_BYTES + 1)
+
+        val error = assertThrows(CertificateInputTooLargeException::class.java) {
+            parser.parseKeystore(oversizedKeystore, TEST_PASSWORD, "PKCS12")
+        }
+
+        assertEquals(
+            "Keystore exceeds the maximum supported size of 10 MiB",
+            error.message,
+        )
+    }
+
+    @Test
     fun calculatesSha256Fingerprint() {
         val cert = parseFixtureCertificate()
 

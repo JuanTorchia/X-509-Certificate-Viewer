@@ -1,26 +1,31 @@
-# X.509 Certificate Viewer for IntelliJ
+# CertView X.509
 
 [![JetBrains Plugin](https://img.shields.io/jetbrains/plugin/v/30727?style=flat-square&logo=jetbrains&label=JetBrains%20Marketplace)](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer)
 [![JetBrains Downloads](https://img.shields.io/jetbrains/plugin/d/30727?style=flat-square&logo=jetbrains&label=downloads)](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer)
-[![Build](https://img.shields.io/github/actions/workflow/status/JuanTorchia/X-509-Certificate-Viewer/intellij-publish.yml?branch=main&style=flat-square&label=build)](https://github.com/JuanTorchia/X-509-Certificate-Viewer/actions/workflows/intellij-publish.yml)
+[![Build](https://img.shields.io/github/actions/workflow/status/JuanTorchia/X-509-Certificate-Viewer/intellij-build.yml?branch=main&style=flat-square&label=build)](https://github.com/JuanTorchia/X-509-Certificate-Viewer/actions/workflows/intellij-build.yml)
 [![Security & Quality](https://img.shields.io/github/actions/workflow/status/JuanTorchia/X-509-Certificate-Viewer/security-quality.yml?branch=main&style=flat-square&label=security)](https://github.com/JuanTorchia/X-509-Certificate-Viewer/actions/workflows/security-quality.yml)
+[![UI Integration](https://img.shields.io/github/actions/workflow/status/JuanTorchia/X-509-Certificate-Viewer/ui-integration.yml?branch=main&style=flat-square&label=ui%20integration)](https://github.com/JuanTorchia/X-509-Certificate-Viewer/actions/workflows/ui-integration.yml)
 [![License](https://img.shields.io/github/license/JuanTorchia/X-509-Certificate-Viewer?style=flat-square)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/JuanTorchia/X-509-Certificate-Viewer?style=social)](https://github.com/JuanTorchia/X-509-Certificate-Viewer/stargazers)
 
-Inspect X.509 certificates and Java keystores directly inside IntelliJ-based
-IDEs. This plugin is part of Juan Torchia's public engineering lab around
-secure systems, digital trust, PKI workflows, and developer tooling that works
+Inspect X.509 certificates and Java keystores inside IntelliJ without leaving
+the IDE. This plugin is part of Juan Torchia's public engineering lab around
+secure systems, digital trust, PKI workflows, and developer tooling that stays
 close to real production inputs.
 
 [Install from JetBrains Marketplace](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer)
+· [Star the repo](https://github.com/JuanTorchia/X-509-Certificate-Viewer)
 · [Report an issue](https://github.com/JuanTorchia/X-509-Certificate-Viewer/issues)
 · [Contribute](CONTRIBUTING.md)
+· [Wiki](https://github.com/JuanTorchia/X-509-Certificate-Viewer/wiki)
+· [Roadmap discussion](https://github.com/JuanTorchia/X-509-Certificate-Viewer/discussions/24)
 · [juanchi.dev](https://juanchi.dev/en)
 
 ## Why This Exists
 
 Certificate-heavy Java projects often force developers to leave the IDE for
 terminal glue: `openssl`, `keytool`, temporary dumps, copied passwords, and
-half-remembered commands. X.509 Certificate Viewer keeps the inspection loop
+half-remembered commands. CertView X.509 keeps the inspection loop
 inside JetBrains IDEs while staying explicit about what it does and does not do.
 
 Use it when you need to quickly inspect:
@@ -40,14 +45,17 @@ The plugin is published on JetBrains Marketplace:
 
 | Product | What it does | Live signal |
 | --- | --- | --- |
-| [X.509 Certificate Viewer for IntelliJ](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer) | Inspect X.509 certificates and Java keystores inside IntelliJ-based IDEs. | ![version](https://img.shields.io/jetbrains/plugin/v/30727?style=flat-square&logo=jetbrains&label=version) ![downloads](https://img.shields.io/jetbrains/plugin/d/30727?style=flat-square&logo=jetbrains&label=downloads) |
+| [CertView X.509](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer) | Inspect X.509 certificates and Java keystores inside IntelliJ-based IDEs. | ![version](https://img.shields.io/jetbrains/plugin/v/30727?style=flat-square&logo=jetbrains&label=version) ![downloads](https://img.shields.io/jetbrains/plugin/d/30727?style=flat-square&logo=jetbrains&label=downloads) |
 
-Related tooling from the same public lab:
+## Screenshots
 
-- [CertView for VS Code](https://github.com/JuanTorchia/certificate-viewer-open-vscode)
-  for X.509, CSR, CRL, key, chain, and keystore inspection in VS Code.
-- [HAProxy Config for VS Code](https://github.com/JuanTorchia/gmm-haproxy-vscode)
-  for production-shaped HAProxy config editing.
+Marketplace and README screenshots are generated from safe demo certificates
+and keystores, not from a maintainer's personal IDE or real customer material.
+
+Screenshot automation is tracked in
+[#17](https://github.com/JuanTorchia/X-509-Certificate-Viewer/issues/17), and
+the first README/Marketplace image batch is tracked in
+[#14](https://github.com/JuanTorchia/X-509-Certificate-Viewer/issues/14).
 
 ## Supported Formats
 
@@ -60,6 +68,15 @@ Current IntelliJ file associations:
 | `.der` | DER certificate |
 | `.p12`, `.pfx` | PKCS#12 keystore |
 | `.jks`, `.jceks` | Java keystore |
+
+Input size limits:
+
+| Input type | Maximum size |
+| --- | --- |
+| PEM, DER, CRT, CER certificate files | 1 MiB |
+| PKCS#12, JKS, JCEKS keystores | 10 MiB |
+
+Oversized files are refused before parsing to keep the IDE responsive.
 
 ## IntelliJ Usage
 
@@ -79,8 +96,12 @@ polishing Marketplace metadata, and keeping the contributor workflow simple.
 Active work is tracked in:
 
 - [Roadmap](docs/ROADMAP.md)
+- [Public contributor readiness milestone](https://github.com/JuanTorchia/X-509-Certificate-Viewer/milestone/1)
+- [Roadmap discussion](https://github.com/JuanTorchia/X-509-Certificate-Viewer/discussions/24)
+- [Project wiki](https://github.com/JuanTorchia/X-509-Certificate-Viewer/wiki)
 - [Open issues](https://github.com/JuanTorchia/X-509-Certificate-Viewer/issues)
 - [Dependency health policy](docs/DEPENDENCY_HEALTH.md)
+- [Release policy](docs/RELEASE_POLICY.md)
 - [Marketplace screenshot workflow](docs/MARKETPLACE_SCREENSHOTS.md)
 
 ## Build From Source
@@ -128,7 +149,7 @@ Full Windows setup is documented in
 | `src/test/kotlin/` | Parser and plugin tests. |
 | `src/main/resources/META-INF/plugin.xml` | JetBrains plugin metadata and extension registrations. |
 | `build.gradle.kts` | Gradle build for the plugin. |
-| `.github/workflows/` | CI, security, quality, and publishing workflows. |
+| `.github/workflows/` | CI, security, quality, and release workflows. |
 | `.github/dependabot.yml` | Daily dependency update automation for Gradle and GitHub Actions. |
 | `docs/` | Development, roadmap, and dependency health notes. |
 
@@ -141,8 +162,12 @@ conservative:
 - Dependency Review blocks high-severity dependency findings in PRs.
 - CodeQL analyzes Java/Kotlin code.
 - Gradle build and tests run in CI.
+- Merging to `main` does not publish to JetBrains Marketplace; releases follow
+  the explicit [release policy](docs/RELEASE_POLICY.md).
 - UI Integration runs the full `validateFunctional` gate as an experimental,
   non-blocking signal while the IntelliJ sandbox test is stabilized.
+- Certificate and keystore inputs have explicit size limits and oversized
+  files are rejected before parser work starts.
 - Secret scanning and push protection are expected at the repository level;
   GitGuardian may also appear as an external app check when enabled by the
   repository owner.
@@ -163,6 +188,13 @@ certificate formats affected. Good first contributions include:
 - UI polish with before/after screenshots
 - Marketplace and documentation improvements
 - compatibility checks for newer JetBrains IDE builds
+
+Current contributor entry points:
+
+- [Good first issues](https://github.com/JuanTorchia/X-509-Certificate-Viewer/labels/good%20first%20issue)
+- [Help wanted issues](https://github.com/JuanTorchia/X-509-Certificate-Viewer/labels/help%20wanted)
+- [Public contributor readiness milestone](https://github.com/JuanTorchia/X-509-Certificate-Viewer/milestone/1)
+- [Roadmap discussion](https://github.com/JuanTorchia/X-509-Certificate-Viewer/discussions/24)
 
 Start with [CONTRIBUTING.md](CONTRIBUTING.md) and look for
 [`good first issue`](https://github.com/JuanTorchia/X-509-Certificate-Viewer/labels/good%20first%20issue)

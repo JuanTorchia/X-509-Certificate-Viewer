@@ -7,6 +7,8 @@ import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.util.Base64
 
+class CertificateInputTooLargeException(message: String) : IllegalArgumentException(message)
+
 @Service(Service.Level.APP)
 class X509ParserService {
 
@@ -14,8 +16,10 @@ class X509ParserService {
 
     fun parseCertificate(data: String): X509Certificate? {
         return try {
+            if (data.toByteArray(Charsets.UTF_8).size > MAX_CERTIFICATE_BYTES) return null
             val cleanData = cleanPem(data)
             val decoded = Base64.getDecoder().decode(cleanData)
+            if (decoded.size > MAX_CERTIFICATE_BYTES) return null
             cf.generateCertificate(ByteArrayInputStream(decoded)) as? X509Certificate
         } catch (e: Exception) {
             // Log error in production
@@ -25,6 +29,7 @@ class X509ParserService {
 
     fun parseDer(data: ByteArray): X509Certificate? {
         return try {
+            if (data.size > MAX_CERTIFICATE_BYTES) return null
             cf.generateCertificate(ByteArrayInputStream(data)) as? X509Certificate
         } catch (e: Exception) {
             null
@@ -32,6 +37,12 @@ class X509ParserService {
     }
 
     fun parseKeystore(data: ByteArray, password: CharArray?, type: String = "PKCS12"): List<X509Certificate> {
+        if (data.size > MAX_KEYSTORE_BYTES) {
+            throw CertificateInputTooLargeException(
+                "Keystore exceeds the maximum supported size of ${formatBytes(MAX_KEYSTORE_BYTES.toLong())}",
+            )
+        }
+
         val certs = mutableListOf<X509Certificate>()
         try {
             val ks = java.security.KeyStore.getInstance(type)
@@ -73,5 +84,20 @@ class X509ParserService {
         return pem.replace("-----BEGIN CERTIFICATE-----", "")
             .replace("-----END CERTIFICATE-----", "")
             .replace("\\s".toRegex(), "")
+    }
+
+    companion object {
+        const val MAX_CERTIFICATE_BYTES = 1 * 1024 * 1024
+        const val MAX_KEYSTORE_BYTES = 10 * 1024 * 1024
+
+        fun formatBytes(bytes: Long): String {
+            val mib = 1024L * 1024L
+            val kib = 1024L
+            return when {
+                bytes >= mib -> "${bytes / mib} MiB"
+                bytes >= kib -> "${bytes / kib} KiB"
+                else -> "$bytes bytes"
+            }
+        }
     }
 }
