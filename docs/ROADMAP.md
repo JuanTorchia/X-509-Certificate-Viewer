@@ -57,3 +57,7 @@ security-adjacent tool, and easy for outside contributors to improve.
   updates.
 - Verify compatibility against supported IntelliJ Platform versions before
   widening the supported build range.
+- Keep the published descriptor open-ended from build 261 while Plugin
+  Verifier covers the lowest supported 2026.1 release and current 2026.2
+  release. Add the next stable IDE branch to the matrix before making
+  Marketplace compatibility claims.

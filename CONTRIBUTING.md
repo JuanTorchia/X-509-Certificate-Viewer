@@ -44,8 +44,14 @@ Use the narrowest validation that proves the change:
 ./scripts/dev-env.ps1 ./gradlew.bat validateFunctional --no-daemon
 
 # plugin.xml, IntelliJ extension, or Marketplace compatibility changes
+./scripts/dev-env.ps1 ./gradlew.bat verifyPublishedCompatibility --no-daemon
 ./scripts/dev-env.ps1 ./gradlew.bat verifyPlugin --no-daemon
 ```
+
+Compatibility changes must keep IntelliJ Platform 2026.1 as the lowest build
+target and pass Plugin Verifier against both 2026.1.4 and 2026.2.2. The
+published descriptor intentionally has no `until-build` cap; the verifier
+matrix is the compatibility guard.
 
 The full functional validation gate runs parser tests, the IntelliJ
 Starter/Driver UI integration test, checks IntelliJ sandbox logs for errors
