@@ -81,8 +81,11 @@ Before publishing a GitHub Release:
 - Run or review `verifyPlugin`.
 - Run or review `validateFunctional`; if the experimental UI job is flaky,
   document the reason and any manual IDE validation.
-- Confirm JetBrains Plugin Verifier reports compatibility for the supported IDE
-  range.
+- Confirm `verifyPublishedCompatibility` reports `since-build=261` and no
+  accidental `until-build` cap.
+- Confirm JetBrains Plugin Verifier reports compatibility for IntelliJ IDEA
+  Ultimate 2026.1.4 and 2026.2.2. Add newer stable IDE branches to the matrix
+  before claiming their support.
 - Review release notes for user-visible changes, compatibility notes, and
   security-sensitive behavior.
 - Review `docs/MARKETPLACE_COPY.md` when Marketplace-facing behavior changes.

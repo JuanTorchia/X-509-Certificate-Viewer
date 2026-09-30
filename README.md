@@ -111,7 +111,13 @@ Requirements:
 - JDK 21
 - IntelliJ Platform Gradle Plugin 2.x
 - Gradle 9.x through the included wrapper
-- IntelliJ Platform 2026.1.x
+- IntelliJ Platform 2026.1.x as the lowest build target
+
+Published builds declare support from IntelliJ Platform 2026.1 onward without
+an artificial upper cap. CI guards the generated descriptor and Plugin
+Verifier checks IntelliJ IDEA Ultimate 2026.1.4 and 2026.2.2. Keeping the build
+target on the lowest supported platform preserves compatibility across the
+Java 21 to Java 25 IDE runtime transition.
 
 Build:
 
@@ -161,7 +167,10 @@ conservative:
 - Dependabot checks Gradle and GitHub Actions dependencies daily.
 - Dependency Review blocks high-severity dependency findings in PRs.
 - CodeQL analyzes Java/Kotlin code.
-- Gradle build and tests run in CI.
+- Gradle build, tests, and the 2026.1/2026.2 Plugin Verifier matrix run in CI.
+- The generated Marketplace descriptor is checked for an accidental upper
+  compatibility cap, and Plugin Verifier covers the supported 2026.1/2026.2
+  range.
 - Merging to `main` does not publish to JetBrains Marketplace; releases follow
   the explicit [release policy](docs/RELEASE_POLICY.md).
 - UI Integration runs the full `validateFunctional` gate as an experimental,

@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("java")
-    id("org.jetbrains.intellij.platform") version "2.18.1"
+    id("org.jetbrains.intellij.platform") version "2.19.0"
     id("org.jetbrains.kotlin.jvm") version "2.3.21"
 }
 
@@ -127,19 +127,47 @@ tasks.register("validateFunctional") {
     dependsOn("test", "verifyIdePluginLogs", "build")
 }
 
+val verifyPublishedCompatibility = tasks.register("verifyPublishedCompatibility") {
+    group = "verification"
+    description = "Checks that the generated Marketplace descriptor follows the compatibility-range policy."
+    dependsOn("patchPluginXml")
+
+    doLast {
+        val descriptor = layout.buildDirectory.file("tmp/patchPluginXml/plugin.xml").get().asFile
+        val document = javax.xml.parsers.DocumentBuilderFactory
+            .newInstance()
+            .newDocumentBuilder()
+            .parse(descriptor)
+        val ideaVersion = document.getElementsByTagName("idea-version").item(0)
+        val attributes = ideaVersion.attributes
+
+        check(attributes.getNamedItem("since-build")?.nodeValue == "261") {
+            "Expected since-build=261 in ${descriptor.path}"
+        }
+        check(attributes.getNamedItem("until-build") == null) {
+            "Expected no until-build cap in ${descriptor.path}; compatibility is guarded by Plugin Verifier."
+        }
+    }
+}
+
+tasks.named("check") {
+    dependsOn(verifyPublishedCompatibility)
+}
+
 intellijPlatform {
     buildSearchableOptions = false
 
     pluginConfiguration {
         ideaVersion {
             sinceBuild = "261"
-            untilBuild = "261.*"
+            untilBuild = provider { null }
         }
     }
 
     pluginVerification {
         ides {
             create(IntelliJPlatformType.IntellijIdeaUltimate, "2026.1.4")
+            create(IntelliJPlatformType.IntellijIdeaUltimate, "2026.2.2")
         }
     }
 

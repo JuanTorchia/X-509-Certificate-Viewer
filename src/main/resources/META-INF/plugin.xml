@@ -27,6 +27,7 @@
 
     <change-notes><![CDATA[
     <ul>
+      <li>Added verified compatibility with IntelliJ Platform 2026.2 while retaining 2026.1 support.</li>
       <li>Improved Marketplace-facing metadata for certificate and keystore workflows.</li>
       <li>Documented supported formats and inspection scope more explicitly.</li>
       <li>Added clearer positioning for local X.509, PKI, and secure backend use cases.</li>

@@ -44,4 +44,4 @@ jobs:
       - name: Build
         run: |
           chmod +x gradlew
-          ./gradlew build
+          ./gradlew build verifyPlugin --no-daemon
