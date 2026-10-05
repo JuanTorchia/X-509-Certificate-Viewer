@@ -47,6 +47,11 @@ The plugin is published on JetBrains Marketplace:
 | --- | --- | --- |
 | [CertView X.509](https://plugins.jetbrains.com/plugin/30727-x-509-certificate-viewer) | Inspect X.509 certificates and Java keystores inside IntelliJ-based IDEs. | ![version](https://img.shields.io/jetbrains/plugin/v/30727?style=flat-square&logo=jetbrains&label=version) ![downloads](https://img.shields.io/jetbrains/plugin/d/30727?style=flat-square&logo=jetbrains&label=downloads) |
 
+Product page, guides and the VS Code edition:
+[gmmhub.net/products/certview-jetbrains](https://gmmhub.net/products/certview-jetbrains).
+Using VS Code instead? See
+[CertView for VS Code](https://gmmhub.net/products/certview-vscode).
+
 ## Screenshots
 
 Marketplace and README screenshots are generated from safe demo certificates
