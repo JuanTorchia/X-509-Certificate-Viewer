@@ -23,6 +23,9 @@
     <br/>
     This is an inspection tool. It does not replace certificate path validation,
     revocation checks, WebPKI policy validation, or organizational PKI review.
+    <br/><br/>
+    Guides and product page: <a href="https://gmmhub.net/products/certview-jetbrains">gmmhub.net</a>.
+    Also available for <a href="https://gmmhub.net/products/certview-vscode">VS Code</a>.
     ]]></description>
 
     <change-notes><![CDATA[
