@@ -30,10 +30,9 @@
 
     <change-notes><![CDATA[
     <ul>
-      <li>Added verified compatibility with IntelliJ Platform 2026.2 while retaining 2026.1 support.</li>
-      <li>Improved Marketplace-facing metadata for certificate and keystore workflows.</li>
-      <li>Documented supported formats and inspection scope more explicitly.</li>
-      <li>Added clearer positioning for local X.509, PKI, and secure backend use cases.</li>
+      <li>Fixed password-protected PKCS#12, JKS, and JCEKS keystores being rejected with "Wrong password" even when the correct password was entered.</li>
+      <li>Added links to the gmmhub.net product page and the VS Code edition.</li>
+      <li>Added screenshots of the certificate and keystore viewer to the documentation.</li>
     </ul>
     ]]></change-notes>
 
