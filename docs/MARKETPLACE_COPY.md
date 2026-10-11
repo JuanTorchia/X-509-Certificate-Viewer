@@ -84,8 +84,8 @@ Recommended Marketplace tag priority:
 
 ## Marketplace Admin Checklist
 
-- Upload at least one reviewed screenshot from `docs/assets/marketplace/` after
-  running the screenshot workflow.
+- Upload the reviewed screenshots `docs/assets/marketplace/certificate-viewer.png`
+  and `docs/assets/marketplace/pkcs12-keystore-viewer.png` (1280x800).
 - Set source code URL to the public GitHub repository.
 - Set issue tracker URL to GitHub Issues.
 - Set documentation URL to the README.

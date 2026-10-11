@@ -54,13 +54,21 @@ Using VS Code instead? See
 
 ## Screenshots
 
-Marketplace and README screenshots are generated from safe demo certificates
-and keystores, not from a maintainer's personal IDE or real customer material.
+A PEM certificate opened in the CertView X.509 editor tab:
 
-Screenshot automation is tracked in
-[#17](https://github.com/JuanTorchia/X-509-Certificate-Viewer/issues/17), and
-the first README/Marketplace image batch is tracked in
-[#14](https://github.com/JuanTorchia/X-509-Certificate-Viewer/issues/14).
+![PEM certificate in the CertView X.509 editor](docs/assets/marketplace/certificate-viewer.png)
+
+A password-protected PKCS#12 keystore showing the leaf and issuer certificates:
+
+![PKCS#12 keystore in the CertView X.509 editor](docs/assets/marketplace/pkcs12-keystore-viewer.png)
+
+Open a certificate, then a keystore with its password prompt:
+
+![CertView X.509 demo](docs/assets/marketplace/certview-demo.gif)
+
+All images are generated from throwaway demo certificates and keystores (see
+[Marketplace Screenshots](docs/MARKETPLACE_SCREENSHOTS.md)), never from real
+customer material or a maintainer's personal IDE.
 
 ## Supported Formats
 
