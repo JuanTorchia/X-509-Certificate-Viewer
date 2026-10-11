@@ -23,7 +23,39 @@ certificate material.
 - `integrationTest` provides the first sandbox smoke-test entry point for
   launching IntelliJ with the plugin installed.
 
-## Generate Screenshots
+## Generate Screenshots on Linux
+
+`scripts/capture-marketplace-screenshots.sh` generates the fixtures under
+`/tmp/certview-demo/fixtures/` (a neutral path, since the project path is
+visible in the Project view) and launches `runIde` on an isolated Xvfb display
+(`:99` by default, never the live desktop). A Gradle init script adds sandbox-only
+JVM flags that skip the consent, trust-project and tips dialogs.
+
+```bash
+scripts/capture-marketplace-screenshots.sh                 # fixtures + sandbox IDE on :99
+scripts/capture-marketplace-screenshots.sh --generate-only # fixtures only
+```
+
+Requires JDK 21, `openssl`, `Xvfb`, `xdotool` and ImageMagick. Once the IDE is
+up, dismiss the "Meet the Islands Theme" tour if shown, then size and capture
+the IDE window:
+
+```bash
+export DISPLAY=:99
+win=$(xdotool search --name '^certview-demo' | head -1)
+xdotool windowmove "$win" 0 0 windowsize "$win" 1280 800
+import -window "$win" docs/assets/marketplace/certificate-viewer.png
+```
+
+Open `demo-keystore.p12` from the Project view, enter `changeit`, and capture
+`pkcs12-keystore-viewer.png` the same way. `certview-demo.gif` is assembled
+from those frames with `convert -delay ... -resize 960x -layers Optimize`.
+
+The leaf certificate is backdated 120 days and signed by a demo root CA, so the
+viewer shows a realistic issuer, SANs, key usage and a partially elapsed
+validity bar.
+
+## Generate Screenshots on Windows
 
 From PowerShell:
 
@@ -68,6 +100,17 @@ The script creates demo files under `build/marketplace-demo/fixtures/`:
 
 The demo keystore password is `changeit`. These files are generated build
 artifacts and should not be committed.
+
+## Current Assets
+
+| File | Content |
+| --- | --- |
+| `certificate-viewer.png` | `demo-certificate.pem` in the custom editor. |
+| `pkcs12-keystore-viewer.png` | `demo-keystore.p12` after entering the demo password. |
+| `certview-demo.gif` | Certificate, password prompt, keystore. README only. |
+
+Upload the two PNGs to the JetBrains Marketplace listing (Marketplace
+screenshots are managed in the vendor web UI, not from `plugin.xml`).
 
 ## Output
 
