@@ -1,0 +1,59 @@
+import groovy.json.JsonOutput
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier
+import org.gradle.api.artifacts.result.UnresolvedDependencyResult
+
+// Resolve only the product/test classpaths and the build-plugin classpath.
+// Other IDE distributions, verifier downloads and arbitrary configurations are not resolved.
+allprojects { p ->
+    p.afterEvaluate {
+        p.tasks.register('securityInventory') {
+            group = 'verification'
+            description = 'Exports exact resolved Maven coordinates and explicit coverage limits.'
+            doLast {
+                def scopes = [runtimeClasspath: 'runtime-candidate', compileClasspath: 'compile-and-ide',
+                              testRuntimeClasspath: 'test', integrationTestRuntimeClasspath: 'integration-test']
+                def inventories = []
+                scopes.each { name, scope ->
+                    def configuration = p.configurations.findByName(name)
+                    if (configuration != null && configuration.canBeResolved) {
+                        inventories.add([configuration: configuration, scope: scope])
+                    }
+                }
+                def buildClasspath = p.buildscript.configurations.findByName('classpath')
+                if (buildClasspath != null) inventories.add([configuration: buildClasspath, scope: 'build-plugin'])
+                def modules = [:]
+                def failures = []
+                def nonMaven = []
+                inventories.each { inventory ->
+                    def result = inventory.configuration.incoming.resolutionResult
+                    result.allDependencies.findAll { it instanceof UnresolvedDependencyResult }.each {
+                        failures.add([scope: inventory.scope, dependency: it.attempted.displayName,
+                                      error: it.failure.message])
+                    }
+                    result.allComponents.each { component ->
+                        def id = component.id
+                        if (id instanceof ModuleComponentIdentifier) {
+                            def key = "${id.group}:${id.module}:${id.version}".toString()
+                            if (!modules.containsKey(key)) modules[key] = [group: id.group, name: id.module,
+                                version: id.version, scopes: []]
+                            if (!modules[key].scopes.contains(inventory.scope)) modules[key].scopes.add(inventory.scope)
+                        } else {
+                            nonMaven.add([scope: inventory.scope, component: id.displayName])
+                        }
+                    }
+                }
+                def output = new File(p.layout.buildDirectory.get().asFile, 'security/inventory.json')
+                output.parentFile.mkdirs()
+                output.text = JsonOutput.prettyPrint(JsonOutput.toJson([
+                    schemaVersion: 1, configurations: inventories.collect { [name: it.configuration.name, scope: it.scope] },
+                    modules: modules.sort().values(), unresolved: failures, nonMaven: nonMaven,
+                    coverageLimits: ['runtime-candidate includes IDE-provided components; it does not prove a library ships in the plugin ZIP',
+                                     'IDE/JBR native components, Gradle distribution, JS bundles and local/project artifacts are not Maven advisory coverage']
+                ]))
+                if (!failures.empty) throw new GradleException('Unresolved security inventory dependencies; inspect build/security/inventory.json')
+                if (modules.empty) throw new GradleException('Empty Maven inventory is not a successful security scan')
+                logger.lifecycle("Security inventory: ${modules.size()} resolved Maven coordinates")
+            }
+        }
+    }
+}
