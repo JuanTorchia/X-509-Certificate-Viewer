@@ -3,6 +3,7 @@ import json
 import pathlib
 import sys
 import urllib.request
+from classify_osv import classify
 
 
 def scan(inventory, query):
@@ -51,13 +52,17 @@ def main():
     directory.mkdir(parents=True, exist_ok=True)
     try:
         result = scan(json.loads((directory / 'inventory.json').read_text()), query_osv)
+        (directory / 'raw-osv.json').write_text(json.dumps(result, indent=2) + '\n')
+        policies = json.loads(pathlib.Path('scripts/security/classifications.json').read_text())
+        result = classify(result, policies)
     except Exception as error:
         (directory / 'osv.json').write_text(json.dumps({'error': str(error), 'scanComplete': False}, indent=2))
         raise
     result['scanComplete'] = True
     (directory / 'osv.json').write_text(json.dumps(result, indent=2) + '\n')
     print(f"OSV queried {result['queriedCoordinates']} Maven coordinates; {len(result['findings'])} affected coordinates")
-    return 1 if result['findings'] else 0
+    print(f"Reviewed advisories: {len(result['reviewedAdvisories'])}; unclassified: {len(result['unclassifiedAdvisories'])}")
+    return 1 if result['unclassifiedAdvisories'] else 0
 
 
 if __name__ == '__main__':

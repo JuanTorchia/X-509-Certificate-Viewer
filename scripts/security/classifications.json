@@ -1,0 +1,17 @@
+[
+  {
+    "package": "io.undertow:undertow-core",
+    "version": "2.4.3.Final",
+    "advisory": "GHSA-3x3v-w654-m28m",
+    "scopes": [
+      "build-plugin"
+    ],
+    "reason": "IntelliJ Gradle 2.19.0 uses a localhost repository shim and path-template parameters, not the servlet getParameterMap/multipart parsing path described by this advisory. OSV has an unbounded introduced=0 range despite advisory last-known affected <2.4.0.Beta1. Build-only; retain raw finding pending upstream correction or fix.",
+    "evidence": [
+      "https://github.com/JetBrains/intellij-platform-gradle-plugin/blob/2.19.0/src/main/kotlin/org/jetbrains/intellij/platform/gradle/shim/Shim.kt",
+      "https://github.com/advisories/GHSA-3x3v-w654-m28m"
+    ],
+    "issue": "https://github.com/JuanTorchia/X-509-Certificate-Viewer/issues/62",
+    "expires": "2026-12-02"
+  }
+]
