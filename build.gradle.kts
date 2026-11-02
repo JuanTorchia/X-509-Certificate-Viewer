@@ -1,12 +1,21 @@
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+// Keep vulnerable build-tool transitives aligned without changing plugin runtime libraries.
+buildscript {
+    dependencies {
+        classpath(platform("com.fasterxml.jackson:jackson-bom:2.21.7"))
+        classpath("org.jsoup:jsoup:1.23.2")
+    }
+}
 
 plugins {
     id("java")
     id("org.jetbrains.intellij.platform") version "2.19.0"
-    id("org.jetbrains.kotlin.jvm") version "2.3.21"
+    id("org.jetbrains.kotlin.jvm") version "2.4.20"
 }
 
 group = "com.architect"
@@ -37,9 +46,18 @@ dependencies {
         testFramework(TestFrameworkType.Starter, configurationName = "integrationTestImplementation")
     }
 
+    // Security updates for the isolated IntelliJ Starter/Driver test harness.
+    add("integrationTestImplementation", platform("com.fasterxml.jackson:jackson-bom:2.21.7"))
+    add("integrationTestImplementation", platform("io.netty:netty-bom:4.2.19.Final"))
+    add("integrationTestImplementation", platform("io.opentelemetry:opentelemetry-bom:1.67.0"))
+    add("integrationTestImplementation", "com.google.guava:guava:33.7.2-jre")
+    add("integrationTestImplementation", "org.bouncycastle:bcpkix-jdk18on:1.85")
+    add("integrationTestImplementation", "org.bouncycastle:bcprov-jdk18on:1.85")
+    add("integrationTestImplementation", "org.jsoup:jsoup:1.23.2")
+
     testImplementation("junit:junit:4.13.2")
     add("integrationTestImplementation", "org.junit.jupiter:junit-jupiter:6.1.3")
-    add("integrationTestImplementation", "org.jetbrains.kotlin:kotlin-stdlib:2.4.0-RC2")
+    add("integrationTestImplementation", "org.jetbrains.kotlin:kotlin-stdlib:2.4.20")
     add("integrationTestImplementation", "org.kodein.di:kodein-di-jvm:7.33.0")
     add("integrationTestImplementation", "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.11.0")
     add("integrationTestRuntimeOnly", "org.junit.platform:junit-platform-launcher:6.1.3")
@@ -60,6 +78,8 @@ tasks {
     withType<KotlinCompile>().configureEach {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_21)
+            apiVersion.set(KotlinVersion.KOTLIN_2_3)
+            languageVersion.set(KotlinVersion.KOTLIN_2_3)
         }
     }
 }
@@ -179,5 +199,17 @@ intellijPlatform {
 
     publishing {
         token = System.getenv("PUBLISH_TOKEN")
+    }
+}
+
+// The maintained LZ4 fork preserves net.jpountz APIs and fixes unpatched legacy advisories.
+configurations.named("integrationTestRuntimeClasspath") {
+    resolutionStrategy.dependencySubstitution {
+        substitute(module("org.lz4:lz4-java")).using(module("at.yawk.lz4:lz4-java:1.12.1"))
+    }
+}
+configurations.named("integrationTestCompileClasspath") {
+    resolutionStrategy.dependencySubstitution {
+        substitute(module("org.lz4:lz4-java")).using(module("at.yawk.lz4:lz4-java:1.12.1"))
     }
 }
