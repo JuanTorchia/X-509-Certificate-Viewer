@@ -31,3 +31,11 @@ python3 scripts/security/scan_osv.py
 
 This change adds verification only. It does not modify product dependencies,
 IDE compatibility or publish a Marketplace version. Reverting removes the scan.
+
+
+Actual plugin ZIPs and a per-JAR SHA-256/Maven-metadata inventory are retained
+alongside the Gradle coordinates. This distinguishes the built payload from
+IDE/test/build classpaths. JARs without Maven metadata are explicitly unmapped
+and require review (including identifying this project's own output); they
+are never interpreted as third-party libraries with a clean advisory result.
+Shaded dependencies and non-JAR payloads remain explicit coverage limits.

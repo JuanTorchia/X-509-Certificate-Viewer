@@ -85,6 +85,7 @@ jobs:
 
       - name: Verify scanner contract and query OSV
         run: |
+          python3 scripts/security/inventory_package.py
           python3 -m unittest discover -s scripts/security -p 'test_*.py'
           python3 scripts/security/scan_osv.py
 
@@ -93,7 +94,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: resolved-dependency-security
-          path: build/security/*.json
+          path: |
+            build/security/*.json
+            build/distributions/*.zip
           if-no-files-found: warn
           retention-days: 30
 
