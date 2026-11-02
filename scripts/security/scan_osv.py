@@ -25,10 +25,10 @@ def scan(inventory, query):
         if not isinstance(results, list) or len(results) != len(batch):
             raise ValueError('Incomplete OSV response')
         for module, result in zip(batch, results):
-            if not isinstance(result, dict) or 'error' in result:
+            if not isinstance(result, dict) or any(key != 'vulns' for key in result):
                 raise ValueError('Failed OSV query')
             vulnerabilities = result.get('vulns', [])
-            if not isinstance(vulnerabilities, list) or any(not isinstance(v, dict) or not v.get('id') for v in vulnerabilities):
+            if not isinstance(vulnerabilities, list) or any(not isinstance(v, dict) or not isinstance(v.get('id'), str) or not v['id'] for v in vulnerabilities):
                 raise ValueError('Malformed OSV vulnerability result')
             if vulnerabilities:
                 findings.append({'module': module, 'advisories': vulnerabilities})

@@ -16,7 +16,7 @@ class CoverageContract(unittest.TestCase):
         self.assertEqual(result['findings'][0]['module']['scopes'], ['test'])
 
     def test_partial_failed_and_malformed_responses_are_not_clean(self):
-        for response in ({}, {'results': []}, {'results': [{'error': 'unavailable'}]}, {'results': [{'vulns': 'bad'}]}):
+        for response in ({}, {'results': []}, {'results': [{'error': 'unavailable'}]}, {'results': [{'message': 'failed'}]}, {'results': [{'next_page_token': 'more'}]}, {'results': [{'vulns': 'bad'}]}):
             with self.subTest(response=response), self.assertRaises(ValueError):
                 scan(self.inventory(), lambda _: response)
 
