@@ -78,7 +78,7 @@ jobs:
       - name: Build and test
         run: |
           chmod +x gradlew
-          ./gradlew build --no-daemon
+          ./gradlew build buildPlugin --no-daemon
 
       - name: Resolve exact dependency inventory
         run: ./gradlew --init-script scripts/security/inventory.init.gradle securityInventory --no-daemon
