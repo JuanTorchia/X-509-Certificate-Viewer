@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 // Keep vulnerable build-tool transitives aligned without changing plugin runtime libraries.
 buildscript {
     dependencies {
-        classpath(platform("com.fasterxml.jackson:jackson-bom:2.21.7"))
+        classpath(platform("com.fasterxml.jackson:jackson-bom:2.22.4"))
         classpath("org.jsoup:jsoup:1.23.2")
     }
 }
@@ -47,12 +47,12 @@ dependencies {
     }
 
     // Security updates for the isolated IntelliJ Starter/Driver test harness.
-    add("integrationTestImplementation", platform("com.fasterxml.jackson:jackson-bom:2.21.7"))
+    add("integrationTestImplementation", platform("com.fasterxml.jackson:jackson-bom:2.22.4"))
     add("integrationTestImplementation", platform("io.netty:netty-bom:4.2.19.Final"))
     add("integrationTestImplementation", platform("io.opentelemetry:opentelemetry-bom:1.67.0"))
     add("integrationTestImplementation", "com.google.guava:guava:33.7.2-jre")
-    add("integrationTestImplementation", "org.bouncycastle:bcpkix-jdk18on:1.85")
-    add("integrationTestImplementation", "org.bouncycastle:bcprov-jdk18on:1.85")
+    add("integrationTestImplementation", "org.bouncycastle:bcpkix-jdk18on:1.86")
+    add("integrationTestImplementation", "org.bouncycastle:bcprov-jdk18on:1.86")
     add("integrationTestImplementation", "org.jsoup:jsoup:1.23.2")
 
     testImplementation("junit:junit:4.13.2")
