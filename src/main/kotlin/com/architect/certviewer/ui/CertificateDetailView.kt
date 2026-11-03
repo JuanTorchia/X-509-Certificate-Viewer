@@ -123,7 +123,7 @@ class CertificateDetailView {
                 }
             }
             
-            mainPanel.add(contentPanel, BorderLayout.NORTH)
+            mainPanel.add(contentPanel, BorderLayout.CENTER)
             scrollContent.add(mainPanel, BorderLayout.NORTH)
             content.revalidate()
             content.repaint()
