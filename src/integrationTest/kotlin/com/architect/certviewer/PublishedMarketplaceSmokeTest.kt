@@ -96,7 +96,8 @@ class PublishedMarketplaceSmokeTest {
                 ui.x { byVisibleText(leaf.subjectX500Principal.name) }.waitFound()
                 ui.x { byVisibleText("Subject Alt Names") }.waitFound()
                 ui.x { byVisibleText("DNS: marketplace.example") }.waitFound()
-                ui.x { byVisibleText("SHA-256") }.waitFound()
+                assertEquals(if (name == "chain.pem" || name.startsWith("keystore.")) 2 else 1,
+                    ui.xx { byVisibleText("SHA-256") }.list().size, "Fingerprint fields for every certificate in $name")
                 val fingerprintLabel = ui.x { byVisibleText(fingerprint.take(77) + "...") }.waitFound()
                 assertEquals(fingerprint, cast(fingerprintLabel.component, TooltipText::class).getToolTipText())
                 assertEquals(1, ui.xx { byVisibleText("VALID") }.list().size, "Leaf validity badge for $name")
