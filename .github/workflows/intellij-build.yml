@@ -38,10 +38,25 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
+      - name: Disk space before Gradle setup
+        run: df -h "$GITHUB_WORKSPACE" "$HOME"
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
+        with:
+          # IDE/verifier downloads can make a shared Gradle home cache exceed runner disk.
+          cache-disabled: true
+
+      - name: Disk space after Gradle setup
+        run: df -h "$GITHUB_WORKSPACE" "$HOME"
 
       - name: Build
         run: |
           chmod +x gradlew
           ./gradlew build buildPlugin verifyPlugin --no-daemon
+
+      - name: Disk space after build
+        if: always()
+        run: |
+          df -h "$GITHUB_WORKSPACE" "$HOME"
+          du -sh "$HOME/.gradle" "$GITHUB_WORKSPACE/.intellijPlatform" 2>/dev/null || true
