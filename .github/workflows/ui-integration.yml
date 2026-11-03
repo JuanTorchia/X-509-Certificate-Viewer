@@ -11,6 +11,7 @@ on:
       - 'gradlew.bat'
       - 'scripts/**'
       - '.github/workflows/ui-integration.yml'
+      - '.github/workflows/intellij-build.yml'
   schedule:
     - cron: '37 10 * * 2'
   workflow_dispatch:
@@ -40,4 +41,16 @@ jobs:
       - name: Run parser, build, and IntelliJ UI sandbox validation
         run: |
           chmod +x gradlew
-          xvfb-run --auto-servernum ./gradlew validateFunctional --no-daemon --stacktrace
+          xvfb-run --auto-servernum ./gradlew validateFunctional --no-daemon --stacktrace --info
+
+      - name: Retain functional test diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: functional-test-diagnostics
+          path: |
+            build/test-results/integrationTest/**
+            build/reports/tests/integrationTest/**
+            out/ide-tests/tests/**/idea.log
+          if-no-files-found: warn
+          retention-days: 14

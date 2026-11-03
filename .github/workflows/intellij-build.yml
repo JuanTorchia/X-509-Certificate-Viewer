@@ -11,6 +11,7 @@ on:
       - 'gradlew'
       - 'gradlew.bat'
       - '.github/workflows/intellij-build.yml'
+      - '.github/workflows/ui-integration.yml'
   pull_request:
     paths:
       - 'src/**'
@@ -20,6 +21,7 @@ on:
       - 'gradlew'
       - 'gradlew.bat'
       - '.github/workflows/intellij-build.yml'
+      - '.github/workflows/ui-integration.yml'
 
 permissions:
   contents: read
