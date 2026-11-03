@@ -79,7 +79,7 @@ class PublishedMarketplaceSmokeTest {
                     val file = findFile(name, project) ?: error("Missing generated fixture: $name")
                     val editors = manager.openFile(file, true, true)
                     assertEquals(1, editors.size, "One custom editor for $name")
-                    service(CloseEditors::class, project).setSelectedEditor(file, "x509-certificate-viewer")
+                    service(EditorControls::class, project).setSelectedEditor(file, "x509-certificate-viewer")
                     assertEquals(file.getPath(), manager.getCurrentFile().getPath())
                     assertNull(manager.getSelectedTextEditor(), "No fallback text editor for $name")
                 }
@@ -125,7 +125,7 @@ class PublishedMarketplaceSmokeTest {
                 takeScreenshot("verified-$name")
                 withContext(OnDispatcher.EDT, LockSemantics.NO_LOCK) {
                     val project = singleProject()
-                    service(CloseEditors::class, project).closeAllFiles()
+                    service(EditorControls::class, project).closeFile(findFile(name, project) ?: error("Missing opened fixture: $name"))
                 }
             }
         }
@@ -133,9 +133,9 @@ class PublishedMarketplaceSmokeTest {
 }
 
 @Remote("com.intellij.openapi.fileEditor.FileEditorManager")
-interface CloseEditors {
+interface EditorControls {
     fun setSelectedEditor(file: VirtualFile, editorTypeId: String)
-    fun closeAllFiles()
+    fun closeFile(file: VirtualFile)
 }
 
 @Remote("javax.swing.JComponent")
