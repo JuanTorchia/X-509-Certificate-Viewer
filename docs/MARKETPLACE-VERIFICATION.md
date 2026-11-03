@@ -13,7 +13,10 @@ is published by this workflow.
 
 Generated disposable PEM, DER, PEM chain, PKCS12, JKS and JCEKS inputs exercise
 the custom editor, modal password entry, subject/SAN, full fingerprint tooltip,
-validity dates/status and issuer certificate rendering. The fixtures use only
+validity dates/status and issuer certificate rendering. PKCS12 must prompt;
+JKS/JCEKS may expose public certificates with a null password, without checking
+store integrity or decrypting private keys. The test records that distinction.
+The fixtures use only
 reserved `.example` names and password `changeit`; they are not production PKI.
 Keys remain under ignored build output and are not uploaded. UI checks resolve
 the queries with `waitFound`; creating a lazy query alone proves nothing.

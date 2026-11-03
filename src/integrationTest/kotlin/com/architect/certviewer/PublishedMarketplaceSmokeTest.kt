@@ -73,10 +73,22 @@ class PublishedMarketplaceSmokeTest {
                     assertNull(manager.getSelectedTextEditor(), "No fallback text editor for $name")
                 }
                 if (name.startsWith("keystore.")) {
-                    val passwordDialog = ui.dialog(title = "Certificate Password Required").waitFound(30.seconds)
-                    passwordDialog.textField { byType("javax.swing.JPasswordField") }.text = "changeit"
-                    passwordDialog.x { and(byType("javax.swing.JButton"), byAccessibleName("OK")) }.waitFound().click()
-                    passwordDialog.waitNotFound(30.seconds)
+                    val passwordDialog = ui.dialog(title = "Certificate Password Required")
+                    val analysis = ui.x { byVisibleText("Certificate Analysis") }
+                    val renderDeadline = System.currentTimeMillis() + 30_000
+                    while (!passwordDialog.present() && !analysis.present() && System.currentTimeMillis() < renderDeadline) {
+                        Thread.sleep(200)
+                    }
+                    val prompted = passwordDialog.present()
+                    // JKS/JCEKS can expose their public certificates with a null password;
+                    // that does not verify store integrity or decrypt the private key.
+                    if (name == "keystore.p12") assertTrue(prompted, "Encrypted PKCS12 must request the demo password")
+                    if (prompted) {
+                        passwordDialog.textField { byType("javax.swing.JPasswordField") }.text = "changeit"
+                        passwordDialog.x { and(byType("javax.swing.JButton"), byAccessibleName("OK")) }.waitFound().click()
+                        passwordDialog.waitNotFound(30.seconds)
+                    }
+                    println("MARKETPLACE_PASSWORD file=$name prompted=$prompted integrityVerificationClaimed=false")
                 }
                 // waitFound resolves the lazy UI query and fails if content never renders.
                 ui.x { byVisibleText("Certificate Analysis") }.waitFound(30.seconds)
