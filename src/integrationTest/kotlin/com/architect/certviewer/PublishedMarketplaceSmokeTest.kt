@@ -87,13 +87,13 @@ class PublishedMarketplaceSmokeTest {
                 ui.x { byVisibleText("SHA-256") }.waitFound()
                 val fingerprintLabel = ui.x { byVisibleText(fingerprint.take(77) + "...") }.waitFound()
                 assertEquals(fingerprint, cast(fingerprintLabel.component, TooltipText::class).getToolTipText())
-                val expectedCertificates = if (name == "chain.pem" || name.startsWith("keystore.")) 2 else 1
-                assertEquals(expectedCertificates, ui.xx { byVisibleText("VALID") }.list().size, "Validity badges for $name")
+                assertEquals(1, ui.xx { byVisibleText("VALID") }.list().size, "Leaf validity badge for $name")
                 val dateFormat = SimpleDateFormat("yyyy-M-d")
                 val validity = "${dateFormat.format(leaf.notBefore)} — ${dateFormat.format(leaf.notAfter)}"
                 ui.x { byVisibleText(validity) }.waitFound()
                 if (name == "chain.pem" || name.startsWith("keystore.")) {
                     ui.x { byVisibleText("Issuer Certificate") }.waitFound()
+                    ui.x { byVisibleText("SELF-SIGNED") }.waitFound()
                 }
                 assertTrue(ui.xx { byVisibleText("Wrong password or invalid Keystore") }.list().isEmpty())
                 println("MARKETPLACE_FLOW_PASS file=$name subject=true san=true fingerprint=true validity=true")
