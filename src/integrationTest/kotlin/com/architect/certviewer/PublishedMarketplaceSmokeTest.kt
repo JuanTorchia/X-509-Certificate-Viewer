@@ -87,7 +87,8 @@ class PublishedMarketplaceSmokeTest {
                 ui.x { byVisibleText("SHA-256") }.waitFound()
                 val fingerprintLabel = ui.x { byVisibleText(fingerprint.take(77) + "...") }.waitFound()
                 assertEquals(fingerprint, cast(fingerprintLabel.component, TooltipText::class).getToolTipText())
-                ui.x { byVisibleText("VALID") }.waitFound()
+                val expectedCertificates = if (name == "chain.pem" || name.startsWith("keystore.")) 2 else 1
+                assertEquals(expectedCertificates, ui.xx { byVisibleText("VALID") }.list().size, "Validity badges for $name")
                 val dateFormat = SimpleDateFormat("yyyy-M-d")
                 val validity = "${dateFormat.format(leaf.notBefore)} — ${dateFormat.format(leaf.notAfter)}"
                 ui.x { byVisibleText(validity) }.waitFound()
