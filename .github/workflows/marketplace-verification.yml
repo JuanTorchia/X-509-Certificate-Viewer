@@ -52,5 +52,6 @@ jobs:
             build/test-results/integrationTest/**
             out/ide-tests/tests/**/idea.log
             out/ide-tests/tests/**/log/screenshots/**
+            out/ide-tests/tests/**/log/ui-hierarchy/**
           if-no-files-found: error
           retention-days: 14
