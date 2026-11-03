@@ -9,6 +9,7 @@ import com.intellij.driver.sdk.getOpenProjects
 import com.intellij.driver.sdk.getPlugin
 import com.intellij.driver.sdk.isPluginLoaded
 import com.intellij.driver.sdk.singleProject
+import com.intellij.driver.sdk.waitForIndicators
 import com.intellij.driver.sdk.ui.components.UiComponent.Companion.waitFound
 import com.intellij.driver.sdk.ui.components.elements.dialog
 import com.intellij.driver.sdk.ui.components.elements.textField
@@ -31,6 +32,7 @@ import java.security.cert.X509Certificate
 import java.text.SimpleDateFormat
 import kotlin.io.path.copyTo
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 
 /** Runs the same real-IDE assertions against a candidate or exact public artifact. */
 @EnabledIfEnvironmentVariable(named = "CERTVIEW_PUBLISHED_SMOKE", matches = "1")
@@ -65,6 +67,8 @@ class PublishedMarketplaceSmokeTest {
             val deadline = System.currentTimeMillis() + 90_000
             while (getOpenProjects().isEmpty() && System.currentTimeMillis() < deadline) Thread.sleep(1_000)
             assertTrue(getOpenProjects().isNotEmpty(), "Sandbox project must open")
+            // Startup can open a Trial tab after project-open; wait for the actual IDE to settle.
+            waitForIndicators(3.minutes)
             assertTrue(isPluginLoaded("com.architect.certviewer"))
             assertEquals(version, getPlugin("com.architect.certviewer")?.getVersion())
             for (name in names) {
@@ -74,6 +78,7 @@ class PublishedMarketplaceSmokeTest {
                     val file = findFile(name, project) ?: error("Missing generated fixture: $name")
                     val editors = manager.openFile(file, true, true)
                     assertEquals(1, editors.size, "One custom editor for $name")
+                    manager.setSelectedEditor(editors.single())
                     assertEquals(file.getPath(), manager.getCurrentFile().getPath())
                     assertNull(manager.getSelectedTextEditor(), "No fallback text editor for $name")
                 }
