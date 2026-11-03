@@ -10,6 +10,7 @@ import com.intellij.driver.sdk.getPlugin
 import com.intellij.driver.sdk.isPluginLoaded
 import com.intellij.driver.sdk.singleProject
 import com.intellij.driver.sdk.ui.components.UiComponent.Companion.waitFound
+import com.intellij.driver.sdk.ui.components.elements.dialog
 import com.intellij.driver.sdk.ui.components.elements.textField
 import com.intellij.driver.sdk.ui.ui
 import com.intellij.ide.starter.driver.engine.runIdeWithDriver
@@ -72,9 +73,10 @@ class PublishedMarketplaceSmokeTest {
                     assertNull(manager.getSelectedTextEditor(), "No fallback text editor for $name")
                 }
                 if (name.startsWith("keystore.")) {
-                    ui.x { byVisibleText("Certificate Password Required") }.waitFound(30.seconds)
-                    ui.textField { byType("javax.swing.JPasswordField") }.text = "changeit"
-                    ui.x { and(byType("javax.swing.JButton"), byVisibleText("OK")) }.waitFound().click()
+                    val passwordDialog = ui.dialog(title = "Certificate Password Required").waitFound(30.seconds)
+                    passwordDialog.textField { byType("javax.swing.JPasswordField") }.text = "changeit"
+                    passwordDialog.x { and(byType("javax.swing.JButton"), byAccessibleName("OK")) }.waitFound().click()
+                    passwordDialog.waitNotFound(30.seconds)
                 }
                 // waitFound resolves the lazy UI query and fails if content never renders.
                 ui.x { byVisibleText("Certificate Analysis") }.waitFound(30.seconds)
