@@ -59,12 +59,15 @@ revert; public release rollback normally uses a fix-forward version.
 
 ## Modal-dialog ordering
 
-Opening a password-protected store can show a modal dialog between remote
-editor calls. The controller must remain free to enter the generated password.
-The openFile phase runs on a worker with the pinned Driver's per-thread
-context; the main test handles the dialog, then waits for the bounded opening
-result. The Driver serializes RPC on each connection, so this is not a generic
-guarantee for APIs that synchronously open nested modals. CertView constructs
-its editor asynchronously; that operation returns before showing the dialog. Editor selection/current-file/text-editor assertions run only after
-that modal has closed. Source/version/field/log assertions remain mandatory.
-This fixes a harness race (#66), not plugin runtime behavior; no new release.
+Opening a password-protected store can enter a nested modal while a remote
+openFile invocation still retains the Driver's serialized JMX connection.
+A worker future did not remove this race (#66): candidate run 41565832718
+blocked before openFile returned. The test now locates each file's visible
+Project tree row through the Driver, finishes those queries, and sends a native
+AWT double-click from the controller. Controller and IDE share the workflow's
+isolated Xvfb display. Each mouse press is balanced by a release in finally.
+No pending remote open invocation can monopolize the connection when the test
+handles the generated password dialog. Editor identity/count and all six
+field/source/version/log assertions remain mandatory after the modal closes.
+This changes only the harness, not the runtime or release. Do not execute this
+native-input test against a personal desktop; use its isolated CI workflow.
