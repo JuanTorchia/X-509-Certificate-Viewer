@@ -76,8 +76,8 @@ class PublishedMarketplaceSmokeTest {
             assertEquals(version, getPlugin("com.architect.certviewer")?.getVersion())
             for (name in names) {
                 println("CERTIFICATE_OPEN_REQUEST file=$name")
-                // The Driver keeps per-thread sessions. Let the controller handle a modal
-                // password even if opening the editor itself enters a nested event loop.
+                // Keep the async open phase separate from later EDT metadata queries.
+                // The plugin returns from editor construction before showing its modal.
                 val opening = CompletableFuture.supplyAsync {
                     withContext(OnDispatcher.EDT, LockSemantics.NO_LOCK) {
                         val project = singleProject()

@@ -61,8 +61,10 @@ revert; public release rollback normally uses a fix-forward version.
 
 Opening a password-protected store can show a modal dialog between remote
 editor calls. The controller must remain free to enter the generated password.
-The openFile call runs asynchronously in the Driver's documented per-thread
-session; the main test handles the dialog, then waits for the bounded opening
-result. Editor selection/current-file/text-editor assertions run only after
+The openFile phase runs on a worker with the pinned Driver's per-thread
+context; the main test handles the dialog, then waits for the bounded opening
+result. The Driver serializes RPC on each connection, so this is not a generic
+guarantee for APIs that synchronously open nested modals. CertView constructs
+its editor asynchronously; that operation returns before showing the dialog. Editor selection/current-file/text-editor assertions run only after
 that modal has closed. Source/version/field/log assertions remain mandatory.
 This fixes a harness race (#66), not plugin runtime behavior; no new release.
