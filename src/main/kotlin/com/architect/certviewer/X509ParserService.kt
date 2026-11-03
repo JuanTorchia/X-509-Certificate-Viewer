@@ -43,6 +43,9 @@ class X509ParserService {
     }
 
     fun parseDer(data: ByteArray): X509Certificate? {
+        // CertificateFactory also accepts PEM and would silently take its first block.
+        // X.509 DER begins with an ASN.1 SEQUENCE; leave PEM to the chain parser.
+        if (data.firstOrNull() != 0x30.toByte()) return null
         return try {
             if (data.size > MAX_CERTIFICATE_BYTES) return null
             cf.generateCertificate(ByteArrayInputStream(data)) as? X509Certificate

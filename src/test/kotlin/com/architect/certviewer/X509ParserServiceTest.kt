@@ -33,6 +33,17 @@ class X509ParserServiceTest {
     }
 
     @Test
+    fun derProbeLeavesPemChainForTheMultiCertificateParser() {
+        val chain = TEST_CERTIFICATE_PEM + "\n" + SECOND_CERTIFICATE_PEM
+        assertNull("A DER probe must not consume the first PEM certificate", parser.parseDer(chain.toByteArray()))
+        val certificates = parser.parseCertificates(chain)
+        assertEquals(2, certificates.size)
+        assertEquals("CN=Test Certificate,O=Certificate Viewer,C=US", certificates[0].subjectX500Principal.name)
+        assertEquals("CN=Second Certificate,O=Certificate Viewer,C=US", certificates[1].subjectX500Principal.name)
+        assertNotNull(parser.parseDer(certificates[0].encoded))
+    }
+
+    @Test
     fun parsesPkcs12CertificateEntry() {
         val cert = parseFixtureCertificate()
         val keystore = createKeystore("PKCS12", cert, TEST_PASSWORD)

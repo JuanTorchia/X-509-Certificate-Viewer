@@ -32,12 +32,15 @@ import java.text.SimpleDateFormat
 import kotlin.io.path.copyTo
 import kotlin.time.Duration.Companion.seconds
 
-/** Exercises the public artifact, never path.to.build.plugin or project parser classes. */
+/** Runs the same real-IDE assertions against a candidate or exact public artifact. */
 @EnabledIfEnvironmentVariable(named = "CERTVIEW_PUBLISHED_SMOKE", matches = "1")
 class PublishedMarketplaceSmokeTest {
     @Test
     fun publishedPluginRendersGeneratedCertificatesAndPasswordProtectedStores(@TempDir projectDir: Path) {
-        val version = "1.0.36"
+        val source = System.getenv("CERTVIEW_VERIFY_SOURCE") ?: "published"
+        require(source in setOf("published", "candidate"))
+        val version = if (source == "published") System.getenv("CERTVIEW_MARKETPLACE_VERSION") ?: "1.0.36" else "1.0-SNAPSHOT"
+        require(version.matches(Regex("[0-9]+\\.[0-9]+(?:\\.[0-9]+)?(?:-[A-Za-z0-9.]+)?")))
         val fixtureRoot = Path.of("build/marketplace-verification")
         val names = listOf("certificate.pem", "certificate.der", "chain.pem", "keystore.p12", "keystore.jks", "keystore.jceks")
         names.forEach { fixtureRoot.resolve(it).copyTo(projectDir.resolve(it)) }
@@ -47,15 +50,17 @@ class PublishedMarketplaceSmokeTest {
         val fingerprint = MessageDigest.getInstance("SHA-256").digest(leaf.encoded)
             .joinToString(":") { "%02X".format(it) }
         val context = Starter.newContext(
-            testName = "publishedMarketplace2026_2",
+            testName = "certificateFlows2026_2_$source",
             testCase = TestCase(IdeProductProvider.IU, projectInfo = LocalProjectInfo(projectDir))
                 .withVersion("2026.2.2"),
         ).apply {
-            PluginConfigurator(this).installPluginFromPluginManager("com.architect.certviewer", version)
-                .assertPluginIsInstalled("com.architect.certviewer")
+            val plugins = PluginConfigurator(this)
+            if (source == "published") plugins.installPluginFromPluginManager("com.architect.certviewer", version)
+            else plugins.installPluginFromPath(Path.of(System.getProperty("path.to.build.plugin") ?: error("Missing candidate plugin path")))
+            plugins.assertPluginIsInstalled("com.architect.certviewer")
         }
         assertTrue(context.ide.build.startsWith("262."), "Must execute actual IntelliJ2026.2.x")
-        println("MARKETPLACE_PROOF ide=${context.ide.build} version=$version source=JetBrainsPluginManager")
+        println("CERTIFICATE_IDE_PROOF ide=${context.ide.build} version=$version source=$source")
         context.runIdeWithDriver().useDriverAndCloseIde {
             val deadline = System.currentTimeMillis() + 90_000
             while (getOpenProjects().isEmpty() && System.currentTimeMillis() < deadline) Thread.sleep(1_000)
@@ -88,7 +93,7 @@ class PublishedMarketplaceSmokeTest {
                         passwordDialog.x { and(byType("javax.swing.JButton"), byAccessibleName("OK")) }.waitFound().click()
                         passwordDialog.waitNotFound(30.seconds)
                     }
-                    println("MARKETPLACE_PASSWORD file=$name prompted=$prompted integrityVerificationClaimed=false")
+                    println("CERTIFICATE_PASSWORD file=$name prompted=$prompted integrityVerificationClaimed=false")
                 }
                 // waitFound resolves the lazy UI query and fails if content never renders.
                 ui.x { byVisibleText("Certificate Analysis") }.waitFound(30.seconds)
@@ -109,7 +114,7 @@ class PublishedMarketplaceSmokeTest {
                     ui.x { byVisibleText("SELF-SIGNED") }.waitFound()
                 }
                 assertTrue(ui.xx { byVisibleText("Wrong password or invalid Keystore") }.list().isEmpty())
-                println("MARKETPLACE_FLOW_PASS file=$name subject=true san=true fingerprint=true validity=true")
+                println("CERTIFICATE_FLOW_PASS file=$name subject=true san=true fingerprint=true validity=true")
                 withContext(OnDispatcher.EDT, LockSemantics.NO_LOCK) {
                     val project = singleProject()
                     service(CloseEditors::class, project).closeAllFiles()
