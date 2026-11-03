@@ -12,6 +12,9 @@ import com.intellij.driver.sdk.isPluginLoaded
 import com.intellij.driver.sdk.singleProject
 import com.intellij.driver.sdk.waitForIndicators
 import com.intellij.driver.sdk.ui.components.UiComponent.Companion.waitFound
+import com.intellij.driver.sdk.ui.boundsOnScreen
+import com.intellij.driver.sdk.ui.xQuery
+import com.intellij.driver.sdk.ui.components.elements.tree
 import com.intellij.driver.sdk.ui.components.elements.dialog
 import com.intellij.driver.sdk.ui.components.elements.textField
 import com.intellij.driver.sdk.ui.ui
@@ -31,6 +34,8 @@ import java.security.MessageDigest
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.text.SimpleDateFormat
+import java.awt.Robot
+import java.awt.event.InputEvent
 import kotlin.io.path.copyTo
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Duration.Companion.minutes
@@ -72,16 +77,27 @@ class PublishedMarketplaceSmokeTest {
             waitForIndicators(3.minutes)
             assertTrue(isPluginLoaded("com.architect.certviewer"))
             assertEquals(version, getPlugin("com.architect.certviewer")?.getVersion())
+            val projectTree = ui.tree(xQuery { byType("com.intellij.ide.projectView.impl.ProjectViewTree") })
+            projectTree.waitFound(30.seconds)
+            projectTree.expandAll()
+            // Controller and IDE share the workflow's isolated Xvfb display.
+            // Send native clicks after all RPCs return: openFile can retain the
+            // serialized JMX connection while a nested password modal is open.
+            val nativeInput = Robot()
             for (name in names) {
-                withContext(OnDispatcher.EDT, LockSemantics.NO_LOCK) {
-                    val project = singleProject()
-                    val manager = service(FileEditorManager::class, project)
-                    val file = findFile(name, project) ?: error("Missing generated fixture: $name")
-                    val editors = manager.openFile(file, true, true)
-                    assertEquals(1, editors.size, "One custom editor for $name")
-                    service(EditorControls::class, project).setSelectedEditor(file, "x509-certificate-viewer")
-                    assertEquals(file.getPath(), manager.getCurrentFile().getPath())
-                    assertNull(manager.getSelectedTextEditor(), "No fallback text editor for $name")
+                println("CERTIFICATE_OPEN_REQUEST file=$name")
+                val row = projectTree.collectExpandedPaths().single { it.path.last() == name }.row
+                val point = projectTree.fixture.scrollToRowAndGetVisibleCenter(row)
+                val bounds = projectTree.boundsOnScreen
+                point.translate(bounds.x, bounds.y)
+                nativeInput.mouseMove(point.x, point.y)
+                repeat(2) {
+                    try {
+                        nativeInput.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+                    } finally {
+                        nativeInput.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+                    }
+                    Thread.sleep(80)
                 }
                 if (name.startsWith("keystore.")) {
                     val passwordDialog = ui.dialog(title = "Certificate Password Required")
@@ -101,8 +117,18 @@ class PublishedMarketplaceSmokeTest {
                     }
                     println("CERTIFICATE_PASSWORD file=$name prompted=$prompted integrityVerificationClaimed=false")
                 }
-                // waitFound resolves the lazy UI query and fails if content never renders.
                 ui.x { byVisibleText("Certificate Analysis") }.waitFound(30.seconds)
+                // Only query/focus the editor after native opening and any modal complete.
+                withContext(OnDispatcher.EDT, LockSemantics.NO_LOCK) {
+                    val project = singleProject()
+                    val file = findFile(name, project) ?: error("Missing generated fixture: $name")
+                    val manager = service(FileEditorManager::class, project)
+                    service(EditorControls::class, project).setSelectedEditor(file, "x509-certificate-viewer")
+                    assertEquals(1, manager.getAllEditors().count { it.getFile().getPath() == file.getPath() }, "One custom editor for $name")
+                    assertEquals(file.getPath(), manager.getCurrentFile().getPath())
+                    assertNull(manager.getSelectedTextEditor(), "No fallback text editor for $name")
+                }
+                // waitFound resolves the lazy UI query and fails if content never renders.
                 ui.x { byVisibleText("Main Certificate") }.waitFound()
                 ui.x { byVisibleText("Support this Plugin") }.waitFound()
                 ui.x { byVisibleText(leaf.subjectX500Principal.name) }.waitFound()

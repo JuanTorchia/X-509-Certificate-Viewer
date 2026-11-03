@@ -56,3 +56,18 @@ Prepared patch-release notes are in RELEASE-1.0.37.md. Publishing still follows
 RELEASE_POLICY.md, including explicit maintainer release intent and the protected
 release workflow. Merging this candidate does not publish. Code rollback is a
 revert; public release rollback normally uses a fix-forward version.
+
+## Modal-dialog ordering
+
+Opening a password-protected store can enter a nested modal while a remote
+openFile invocation still retains the Driver's serialized JMX connection.
+A worker future did not remove this race (#66): candidate run 41565832718
+blocked before openFile returned. The test now locates each file's visible
+Project tree row through the Driver, finishes those queries, and sends a native
+AWT double-click from the controller. Controller and IDE share the workflow's
+isolated Xvfb display. Each mouse press is balanced by a release in finally.
+No pending remote open invocation can monopolize the connection when the test
+handles the generated password dialog. Editor identity/count and all six
+field/source/version/log assertions remain mandatory after the modal closes.
+This changes only the harness, not the runtime or release. Do not execute this
+native-input test against a personal desktop; use its isolated CI workflow.
