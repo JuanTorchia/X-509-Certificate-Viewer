@@ -4,6 +4,7 @@ import com.intellij.driver.client.Remote
 import com.intellij.driver.model.LockSemantics
 import com.intellij.driver.model.OnDispatcher
 import com.intellij.driver.sdk.FileEditorManager
+import com.intellij.driver.sdk.VirtualFile
 import com.intellij.driver.sdk.findFile
 import com.intellij.driver.sdk.getOpenProjects
 import com.intellij.driver.sdk.getPlugin
@@ -78,7 +79,7 @@ class PublishedMarketplaceSmokeTest {
                     val file = findFile(name, project) ?: error("Missing generated fixture: $name")
                     val editors = manager.openFile(file, true, true)
                     assertEquals(1, editors.size, "One custom editor for $name")
-                    manager.setSelectedEditor(editors.single())
+                    service(CloseEditors::class, project).setSelectedEditor(file, "x509-certificate-viewer")
                     assertEquals(file.getPath(), manager.getCurrentFile().getPath())
                     assertNull(manager.getSelectedTextEditor(), "No fallback text editor for $name")
                 }
@@ -103,6 +104,7 @@ class PublishedMarketplaceSmokeTest {
                 // waitFound resolves the lazy UI query and fails if content never renders.
                 ui.x { byVisibleText("Certificate Analysis") }.waitFound(30.seconds)
                 ui.x { byVisibleText("Main Certificate") }.waitFound()
+                ui.x { byVisibleText("Support this Plugin") }.waitFound()
                 ui.x { byVisibleText(leaf.subjectX500Principal.name) }.waitFound()
                 ui.x { byVisibleText("Subject Alt Names") }.waitFound()
                 ui.x { byVisibleText("DNS: marketplace.example") }.waitFound()
@@ -120,6 +122,7 @@ class PublishedMarketplaceSmokeTest {
                 }
                 assertTrue(ui.xx { byVisibleText("Wrong password or invalid Keystore") }.list().isEmpty())
                 println("CERTIFICATE_FLOW_PASS file=$name subject=true san=true fingerprint=true validity=true")
+                takeScreenshot("verified-$name")
                 withContext(OnDispatcher.EDT, LockSemantics.NO_LOCK) {
                     val project = singleProject()
                     service(CloseEditors::class, project).closeAllFiles()
@@ -131,6 +134,7 @@ class PublishedMarketplaceSmokeTest {
 
 @Remote("com.intellij.openapi.fileEditor.FileEditorManager")
 interface CloseEditors {
+    fun setSelectedEditor(file: VirtualFile, editorTypeId: String)
     fun closeAllFiles()
 }
 

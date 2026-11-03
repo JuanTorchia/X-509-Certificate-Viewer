@@ -8,8 +8,9 @@ probe consumed the first block before the chain parser could run.
 
 The candidate fix makes the DER entry point require the binary ASN.1 SEQUENCE
 prefix. PEM then reaches the existing multi-block parser. The regression checks
-that actual dispatch boundary and preserves binary DER support. No certificate
-trust, path or revocation validation is implied.
+that actual dispatch boundary and preserves binary DER support. The viewer header also has its own NORTH layout slot, with cards in CENTER
+(#65); the previous duplicate NORTH assignment hid the status/support header.
+No certificate trust, path or revocation validation is implied.
 
 The **Certificate IDE flows** workflow runs the same assertions on actual
 IntelliJ IDEA2026.2.2 with two explicit sources:

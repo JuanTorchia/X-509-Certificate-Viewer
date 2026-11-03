@@ -31,6 +31,7 @@
     <change-notes><![CDATA[
     <ul>
       <li>Fixed PEM chains opening as a single certificate: the DER probe now leaves PEM input to the multi-certificate parser.</li>
+      <li>Restored the analysis header and support link above certificate cards.</li>
       <li>Added real IntelliJ IDEA 2026.2 certificate, chain, PKCS#12, JKS and JCEKS flow verification with generated inputs.</li>
       <li>Retained IntelliJ 2026.1 as the minimum supported platform.</li>
     </ul>

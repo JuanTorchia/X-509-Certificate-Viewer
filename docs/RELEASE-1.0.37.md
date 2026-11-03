@@ -4,7 +4,9 @@ Status: prepared for maintainer review; not published.
 
 Fix: PEM chains now retain all certificate blocks in the editor. The DER probe
 requires binary ASN.1 input, so it no longer consumes the first PEM certificate
-before the chain parser runs. Subject, SAN, fingerprints and validity rendering
+before the chain parser runs. The analysis header and support link are retained
+above the cards instead of being replaced by a second NORTH layout assignment.
+Subject, SAN, fingerprints and validity rendering
 retain their existing inspection-only meaning.
 
 Compatibility: IntelliJ2026.1 minimum, verifier targets2026.1.4/2026.2.2. No new
