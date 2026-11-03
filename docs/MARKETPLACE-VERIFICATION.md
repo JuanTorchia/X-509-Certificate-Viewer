@@ -56,3 +56,13 @@ Prepared patch-release notes are in RELEASE-1.0.37.md. Publishing still follows
 RELEASE_POLICY.md, including explicit maintainer release intent and the protected
 release workflow. Merging this candidate does not publish. Code rollback is a
 revert; public release rollback normally uses a fix-forward version.
+
+## Modal-dialog ordering
+
+Opening a password-protected store can show a modal dialog between remote
+editor calls. The controller must remain free to enter the generated password.
+The openFile call runs asynchronously in the Driver's documented per-thread
+session; the main test handles the dialog, then waits for the bounded opening
+result. Editor selection/current-file/text-editor assertions run only after
+that modal has closed. Source/version/field/log assertions remain mandatory.
+This fixes a harness race (#66), not plugin runtime behavior; no new release.

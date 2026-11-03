@@ -31,6 +31,8 @@ import java.security.MessageDigest
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.text.SimpleDateFormat
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
 import kotlin.io.path.copyTo
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Duration.Companion.minutes
@@ -73,59 +75,75 @@ class PublishedMarketplaceSmokeTest {
             assertTrue(isPluginLoaded("com.architect.certviewer"))
             assertEquals(version, getPlugin("com.architect.certviewer")?.getVersion())
             for (name in names) {
-                withContext(OnDispatcher.EDT, LockSemantics.NO_LOCK) {
-                    val project = singleProject()
-                    val manager = service(FileEditorManager::class, project)
-                    val file = findFile(name, project) ?: error("Missing generated fixture: $name")
-                    val editors = manager.openFile(file, true, true)
-                    assertEquals(1, editors.size, "One custom editor for $name")
-                    service(EditorControls::class, project).setSelectedEditor(file, "x509-certificate-viewer")
-                    assertEquals(file.getPath(), manager.getCurrentFile().getPath())
-                    assertNull(manager.getSelectedTextEditor(), "No fallback text editor for $name")
-                }
-                if (name.startsWith("keystore.")) {
-                    val passwordDialog = ui.dialog(title = "Certificate Password Required")
-                    val analysis = ui.x { byVisibleText("Certificate Analysis") }
-                    val renderDeadline = System.currentTimeMillis() + 30_000
-                    while (!passwordDialog.present() && !analysis.present() && System.currentTimeMillis() < renderDeadline) {
-                        Thread.sleep(200)
+                println("CERTIFICATE_OPEN_REQUEST file=$name")
+                // The Driver keeps per-thread sessions. Let the controller handle a modal
+                // password even if opening the editor itself enters a nested event loop.
+                val opening = CompletableFuture.supplyAsync {
+                    withContext(OnDispatcher.EDT, LockSemantics.NO_LOCK) {
+                        val project = singleProject()
+                        val file = findFile(name, project) ?: error("Missing generated fixture: $name")
+                        val count = service(FileEditorManager::class, project).openFile(file, true, true).size
+                        println("CERTIFICATE_OPEN_FINISHED file=$name editors=$count")
+                        count
                     }
-                    val prompted = passwordDialog.present()
-                    // JKS/JCEKS can expose their public certificates with a null password;
-                    // that does not verify store integrity or decrypt the private key.
-                    if (name == "keystore.p12") assertTrue(prompted, "Encrypted PKCS12 must request the demo password")
-                    if (prompted) {
-                        passwordDialog.textField { byType("javax.swing.JPasswordField") }.text = "changeit"
-                        passwordDialog.x { and(byType("javax.swing.JButton"), byAccessibleName("OK")) }.waitFound().click()
-                        passwordDialog.waitNotFound(30.seconds)
+                }
+                try {
+                    if (name.startsWith("keystore.")) {
+                        val passwordDialog = ui.dialog(title = "Certificate Password Required")
+                        val analysis = ui.x { byVisibleText("Certificate Analysis") }
+                        val renderDeadline = System.currentTimeMillis() + 30_000
+                        while (!passwordDialog.present() && !analysis.present() && System.currentTimeMillis() < renderDeadline) {
+                            Thread.sleep(200)
+                        }
+                        val prompted = passwordDialog.present()
+                        // JKS/JCEKS can expose their public certificates with a null password;
+                        // that does not verify store integrity or decrypt the private key.
+                        if (name == "keystore.p12") assertTrue(prompted, "Encrypted PKCS12 must request the demo password")
+                        if (prompted) {
+                            passwordDialog.textField { byType("javax.swing.JPasswordField") }.text = "changeit"
+                            passwordDialog.x { and(byType("javax.swing.JButton"), byAccessibleName("OK")) }.waitFound().click()
+                            passwordDialog.waitNotFound(30.seconds)
+                        }
+                        println("CERTIFICATE_PASSWORD file=$name prompted=$prompted integrityVerificationClaimed=false")
                     }
-                    println("CERTIFICATE_PASSWORD file=$name prompted=$prompted integrityVerificationClaimed=false")
-                }
-                // waitFound resolves the lazy UI query and fails if content never renders.
-                ui.x { byVisibleText("Certificate Analysis") }.waitFound(30.seconds)
-                ui.x { byVisibleText("Main Certificate") }.waitFound()
-                ui.x { byVisibleText("Support this Plugin") }.waitFound()
-                ui.x { byVisibleText(leaf.subjectX500Principal.name) }.waitFound()
-                ui.x { byVisibleText("Subject Alt Names") }.waitFound()
-                ui.x { byVisibleText("DNS: marketplace.example") }.waitFound()
-                assertEquals(if (name == "chain.pem" || name.startsWith("keystore.")) 2 else 1,
-                    ui.xx { byVisibleText("SHA-256") }.list().size, "Fingerprint fields for every certificate in $name")
-                val fingerprintLabel = ui.x { byVisibleText(fingerprint.take(77) + "...") }.waitFound()
-                assertEquals(fingerprint, cast(fingerprintLabel.component, TooltipText::class).getToolTipText())
-                assertEquals(1, ui.xx { byVisibleText("VALID") }.list().size, "Leaf validity badge for $name")
-                val dateFormat = SimpleDateFormat("yyyy-M-d")
-                val validity = "${dateFormat.format(leaf.notBefore)} — ${dateFormat.format(leaf.notAfter)}"
-                ui.x { byVisibleText(validity) }.waitFound()
-                if (name == "chain.pem" || name.startsWith("keystore.")) {
-                    ui.x { byVisibleText("Issuer Certificate") }.waitFound()
-                    ui.x { byVisibleText("SELF-SIGNED") }.waitFound()
-                }
-                assertTrue(ui.xx { byVisibleText("Wrong password or invalid Keystore") }.list().isEmpty())
-                println("CERTIFICATE_FLOW_PASS file=$name subject=true san=true fingerprint=true validity=true")
-                takeScreenshot("verified-$name")
-                withContext(OnDispatcher.EDT, LockSemantics.NO_LOCK) {
-                    val project = singleProject()
-                    service(EditorControls::class, project).closeFile(findFile(name, project) ?: error("Missing opened fixture: $name"))
+                    assertEquals(1, opening.get(45, TimeUnit.SECONDS).toInt(), "One custom editor for $name")
+                    // Only query/focus the editor after a possible password modal has closed.
+                    withContext(OnDispatcher.EDT, LockSemantics.NO_LOCK) {
+                        val project = singleProject()
+                        val file = findFile(name, project) ?: error("Missing generated fixture: $name")
+                        val manager = service(FileEditorManager::class, project)
+                        service(EditorControls::class, project).setSelectedEditor(file, "x509-certificate-viewer")
+                        assertEquals(file.getPath(), manager.getCurrentFile().getPath())
+                        assertNull(manager.getSelectedTextEditor(), "No fallback text editor for $name")
+                    }
+                    // waitFound resolves the lazy UI query and fails if content never renders.
+                    ui.x { byVisibleText("Certificate Analysis") }.waitFound(30.seconds)
+                    ui.x { byVisibleText("Main Certificate") }.waitFound()
+                    ui.x { byVisibleText("Support this Plugin") }.waitFound()
+                    ui.x { byVisibleText(leaf.subjectX500Principal.name) }.waitFound()
+                    ui.x { byVisibleText("Subject Alt Names") }.waitFound()
+                    ui.x { byVisibleText("DNS: marketplace.example") }.waitFound()
+                    assertEquals(if (name == "chain.pem" || name.startsWith("keystore.")) 2 else 1,
+                        ui.xx { byVisibleText("SHA-256") }.list().size, "Fingerprint fields for every certificate in $name")
+                    val fingerprintLabel = ui.x { byVisibleText(fingerprint.take(77) + "...") }.waitFound()
+                    assertEquals(fingerprint, cast(fingerprintLabel.component, TooltipText::class).getToolTipText())
+                    assertEquals(1, ui.xx { byVisibleText("VALID") }.list().size, "Leaf validity badge for $name")
+                    val dateFormat = SimpleDateFormat("yyyy-M-d")
+                    val validity = "${dateFormat.format(leaf.notBefore)} — ${dateFormat.format(leaf.notAfter)}"
+                    ui.x { byVisibleText(validity) }.waitFound()
+                    if (name == "chain.pem" || name.startsWith("keystore.")) {
+                        ui.x { byVisibleText("Issuer Certificate") }.waitFound()
+                        ui.x { byVisibleText("SELF-SIGNED") }.waitFound()
+                    }
+                    assertTrue(ui.xx { byVisibleText("Wrong password or invalid Keystore") }.list().isEmpty())
+                    println("CERTIFICATE_FLOW_PASS file=$name subject=true san=true fingerprint=true validity=true")
+                    takeScreenshot("verified-$name")
+                    withContext(OnDispatcher.EDT, LockSemantics.NO_LOCK) {
+                        val project = singleProject()
+                        service(EditorControls::class, project).closeFile(findFile(name, project) ?: error("Missing opened fixture: $name"))
+                    }
+                } finally {
+                    opening.cancel(true)
                 }
             }
         }
