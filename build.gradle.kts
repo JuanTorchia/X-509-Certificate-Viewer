@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 buildscript {
     dependencies {
         classpath(platform("com.fasterxml.jackson:jackson-bom:2.22.4"))
-        classpath("org.jsoup:jsoup:1.23.2")
+        classpath("org.jsoup:jsoup:1.24.1")
     }
 }
 
@@ -48,12 +48,12 @@ dependencies {
 
     // Security updates for the isolated IntelliJ Starter/Driver test harness.
     add("integrationTestImplementation", platform("com.fasterxml.jackson:jackson-bom:2.22.4"))
-    add("integrationTestImplementation", platform("io.netty:netty-bom:4.2.19.Final"))
+    add("integrationTestImplementation", platform("io.netty:netty-bom:4.2.20.Final"))
     add("integrationTestImplementation", platform("io.opentelemetry:opentelemetry-bom:1.67.0"))
-    add("integrationTestImplementation", "com.google.guava:guava:33.7.2-jre")
+    add("integrationTestImplementation", "com.google.guava:guava:33.8.0-jre")
     add("integrationTestImplementation", "org.bouncycastle:bcpkix-jdk18on:1.86")
     add("integrationTestImplementation", "org.bouncycastle:bcprov-jdk18on:1.86")
-    add("integrationTestImplementation", "org.jsoup:jsoup:1.23.2")
+    add("integrationTestImplementation", "org.jsoup:jsoup:1.24.1")
 
     testImplementation("junit:junit:4.13.2")
     add("integrationTestImplementation", "org.junit.jupiter:junit-jupiter:6.1.3")
